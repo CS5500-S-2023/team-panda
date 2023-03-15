@@ -37,14 +37,14 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
         StringSelectMenu menu =
                 StringSelectMenu.create("start")
                         .setPlaceholder(
-                                "Choose what you want") // shows the placeholder indicating what
+                                "Choose what you need") // shows the placeholder indicating what
                         // this menu is for
                         .addOption("Place Order", "place-order")
                         .addOption("View Cart", "view-cart")
                         .addOption("View Queue", "view-queue")
                         .addOption("Checkout", "checkout")
                         .build();
-        event.reply("Please choose one page below").setEphemeral(true).addActionRow(menu).queue();
+        event.reply("Let's start your order!").setEphemeral(true).addActionRow(menu).queue();
     }
 
     @Override
