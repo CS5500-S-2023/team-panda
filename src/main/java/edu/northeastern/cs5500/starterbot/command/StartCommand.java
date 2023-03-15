@@ -37,7 +37,7 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
         StringSelectMenu menu =
                 StringSelectMenu.create("start")
                         .setPlaceholder(
-                                "Choose what you need") // shows the placeholder indicating what
+                                "Choose what you need.") // shows the placeholder indicating what
                         // this menu is for
                         .addOption("Place Order", "place-order")
                         .addOption("View Cart", "view-cart")
