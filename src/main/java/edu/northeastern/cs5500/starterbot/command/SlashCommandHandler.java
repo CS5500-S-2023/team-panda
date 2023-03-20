@@ -8,8 +8,14 @@ public interface SlashCommandHandler {
     @Nonnull
     public String getName();
 
+    /**
+     * Gets what discord needs to know about this command.
+     *
+     * @return CommandData and it cannot be null
+     */
     @Nonnull
     public CommandData getCommandData();
 
+    // get to know what to do when get a slash command interaction and where to send it
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event);
 }

@@ -1,3 +1,4 @@
+/** This CommendModule declares all the commands the bot provides */
 package edu.northeastern.cs5500.starterbot.command;
 
 import dagger.Module;
@@ -7,7 +8,7 @@ import dagger.multibindings.IntoSet;
 @Module
 public class CommandModule {
 
-    @Provides
+    @Provides // This is a provider that provides into a set of commands
     @IntoSet
     public SlashCommandHandler provideSayCommand(ButtonCommand sayCommand) {
         return sayCommand;
