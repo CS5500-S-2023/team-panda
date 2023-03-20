@@ -10,6 +10,7 @@ public interface SlashCommandHandler {
 
     /**
      * Gets what discord needs to know about this command.
+     *
      * @return CommandData and it cannot be null
      */
     @Nonnull

@@ -32,7 +32,8 @@ public class SayCommand implements SlashCommandHandler {
                 .addOption(
                         OptionType.STRING,
                         "content", // the name of the command option
-                        "The bot will reply to your command with the provided text", // what the option does
+                        "The bot will reply to your command with the provided text", // what the
+                        // option does
                         true); // it's required. We can add more .addOption()
     }
 

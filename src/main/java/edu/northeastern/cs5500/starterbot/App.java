@@ -1,6 +1,4 @@
-/**
- * App actually starts the app.
- */
+/** App actually starts the app. */
 package edu.northeastern.cs5500.starterbot;
 
 import static spark.Spark.get;

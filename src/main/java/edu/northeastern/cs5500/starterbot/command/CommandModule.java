@@ -1,7 +1,4 @@
-/**
- * This CommendModule declares all the commands the bot provides
- */
-
+/** This CommendModule declares all the commands the bot provides */
 package edu.northeastern.cs5500.starterbot.command;
 
 import dagger.Module;

@@ -1,6 +1,4 @@
-/**
- * This class contains the definition of the bot.
- */
+/** This class contains the definition of the bot. */
 package edu.northeastern.cs5500.starterbot;
 
 import dagger.Component;
@@ -25,7 +23,7 @@ interface BotComponent {
 }
 
 public class Bot {
-// Use dagger for dependency injection. Everything gets injected with no explicit constructors.
+    // Use dagger for dependency injection. Everything gets injected with no explicit constructors.
     @Inject
     Bot() {} // class Bot has Bot component injected
 
@@ -41,11 +39,12 @@ public class Bot {
             throw new IllegalArgumentException(
                     "The BOT_TOKEN environment variable is not defined.");
         }
-        @SuppressWarnings("null") 
-        @Nonnull 
+        @SuppressWarnings("null")
+        @Nonnull
         // intents tell discord what we need in order to work
         Collection<GatewayIntent> intents = EnumSet.noneOf(GatewayIntent.class);
-        // Invoke jda to build a connection based on the token and intents we want, and add a messageListener
+        // Invoke jda to build a connection based on the token and intents we want, and add a
+        // messageListener
         JDA jda = JDABuilder.createLight(token, intents).addEventListeners(messageListener).build();
         // build our list of commands and queue them for later execution
         CommandListUpdateAction commands = jda.updateCommands();
