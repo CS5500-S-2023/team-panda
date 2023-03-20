@@ -27,17 +27,18 @@ public class SayCommand implements SlashCommandHandler {
     @Override
     @Nonnull
     public CommandData getCommandData() {
+        // get the name and descriptions of the command
         return Commands.slash(getName(), "Ask the bot to reply with the provided text")
                 .addOption(
                         OptionType.STRING,
-                        "content",
-                        "The bot will reply to your command with the provided text",
-                        true);
+                        "content", // the name of the command option
+                        "The bot will reply to your command with the provided text", // what the option does
+                        true); // it's required. We can add more .addOption()
     }
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        log.info("event: /say");
+        log.info("event: /say"); // get called when type /say
         var option = event.getOption("content");
         if (option == null) {
             log.error("Received null value for mandatory parameter 'content'");
