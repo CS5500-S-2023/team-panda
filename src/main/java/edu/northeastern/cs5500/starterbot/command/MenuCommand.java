@@ -13,45 +13,43 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 @Singleton
 @Slf4j
-public class StartCommand implements SlashCommandHandler, StringSelectHandler {
+public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
 
     @Inject
-    public StartCommand() {}
+    public MenuCommand() {}
 
     @Override
     @Nonnull
     public String getName() {
-        return "start";
+        return "menu";
     }
 
     @Override
     @Nonnull
     public CommandData getCommandData() {
-        return Commands.slash(
-                getName(), "Provide a start page to users"); // Changed command description
+        return Commands.slash(getName(), "Show menu for users to select dishes.");
     }
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        log.info("event: /start");
+        log.info("event: /menu");
 
         StringSelectMenu menu =
-                StringSelectMenu.create("start")
-                        .setPlaceholder(
-                                "Choose what you need.") // shows the placeholder indicating what
-                        // this menu is for
-                        .addOption("Place Order", "place-order")
-                        .addOption("View Cart", "view-cart")
-                        .addOption("View Queue", "view-queue")
-                        .addOption("Checkout", "checkout")
+                StringSelectMenu.create("menu")
+                        .setPlaceholder("Please select your dishes.")
+                        .addOption("Chow Mein ($1.5)", "chow-mein")
+                        .addOption("Orange Chicken ($3.5)", "orange-chicken")
+                        .addOption("Honey Walnut Shrimp ($3)", "honey-walnut-shrimp")
+                        .addOption("Mushroom Chicken ($3)", "mushroom-chicken")
+                        .addOption("Broccoli Beef ($3)", "broccoli-beef")
                         .build();
-        event.reply("Let's start your order!").setEphemeral(true).addActionRow(menu).queue();
+        event.reply("Please pick your dishes").setEphemeral(true).addActionRow(menu).queue();
     }
 
     @Override
     public void onStringSelectInteraction(@Nonnull StringSelectInteractionEvent event) {
         final String response = event.getInteraction().getValues().get(0);
         Objects.requireNonNull(response);
-        event.reply(response).queue();
+        event.reply("You added: " + response).queue();
     }
 }

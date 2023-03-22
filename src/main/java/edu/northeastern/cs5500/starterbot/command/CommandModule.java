@@ -56,4 +56,16 @@ public class CommandModule {
     public StringSelectHandler provideStartCommandMenuHandler(StartCommand startCommand) {
         return startCommand;
     }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideMenuCommand(MenuCommand menuCommand) {
+        return menuCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public StringSelectHandler provideMenuCommandMenuHandler(MenuCommand menuCommand) {
+        return menuCommand;
+    }
 }
