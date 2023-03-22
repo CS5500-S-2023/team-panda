@@ -37,11 +37,14 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         StringSelectMenu menu =
                 StringSelectMenu.create("menu")
                         .setPlaceholder("Please select your dishes.")
-                        .addOption("Chow Mein ($1.5)", "chow-mein")
-                        .addOption("Orange Chicken ($3.5)", "orange-chicken")
-                        .addOption("Honey Walnut Shrimp ($3)", "honey-walnut-shrimp")
-                        .addOption("Mushroom Chicken ($3)", "mushroom-chicken")
-                        .addOption("Broccoli Beef ($3)", "broccoli-beef")
+                        .addOption(
+                                "Chow Mein",
+                                "chow-mein",
+                                "$1.5") // modified price presentation for all dishes
+                        .addOption("Orange Chicken", "orange-chicken", "$3.5")
+                        .addOption("Honey Walnut Shrimp", "honey-walnut-shrimp", "$3")
+                        .addOption("Mushroom Chicken", "mushroom-chicken", "$3")
+                        .addOption("Broccoli Beef", "broccoli-beef", "$3")
                         .build();
         event.reply("Please pick your dishes").setEphemeral(true).addActionRow(menu).queue();
     }
@@ -51,5 +54,8 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         final String response = event.getInteraction().getValues().get(0);
         Objects.requireNonNull(response);
         event.reply("You added: " + response).queue();
+        // if (response == "chow-mein") {
+        //     String dishName = event.getOption("chow-mein").getAsString();
+        // } remember to try evet.getOption().getDescriton()
     }
 }
