@@ -16,8 +16,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 public class StartCommand implements SlashCommandHandler, StringSelectHandler {
 
     @Inject
-    public StartCommand() {
-    }
+    public StartCommand() {}
 
     @Override
     @Nonnull
@@ -36,15 +35,16 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /start");
 
-        StringSelectMenu menu = StringSelectMenu.create("start")
-                .setPlaceholder(
-                        "Choose what you need.") // shows the placeholder indicating what
-                // this menu is for
-                .addOption("Menu", "menu")
-                .addOption("View Cart", "view-cart")
-                .addOption("View Queue", "view-queue")
-                .addOption("Checkout", "checkout")
-                .build();
+        StringSelectMenu menu =
+                StringSelectMenu.create("start")
+                        .setPlaceholder(
+                                "Choose what you need.") // shows the placeholder indicating what
+                        // this menu is for
+                        .addOption("Menu", "menu")
+                        .addOption("View Cart", "view-cart")
+                        .addOption("View Queue", "view-queue")
+                        .addOption("Checkout", "checkout")
+                        .build();
         event.reply("Let's start your order!").setEphemeral(true).addActionRow(menu).queue();
     }
 
