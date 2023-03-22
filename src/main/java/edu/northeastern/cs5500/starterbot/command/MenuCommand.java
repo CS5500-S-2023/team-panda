@@ -1,5 +1,7 @@
 package edu.northeastern.cs5500.starterbot.command;
 
+import edu.northeastern.cs5500.starterbot.model.Cart;
+import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -14,6 +16,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 @Singleton
 @Slf4j
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
+    Cart cart = new Cart();
 
     @Inject
     public MenuCommand() {}
@@ -50,6 +53,33 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
     public void onStringSelectInteraction(@Nonnull StringSelectInteractionEvent event) {
         final String response = event.getInteraction().getValues().get(0);
         Objects.requireNonNull(response);
-        event.reply("You added: " + response).queue();
+        String reply = "You added " + response + " to your cart.";
+        double dishPrice = 0.0;
+        if (!response.equals("")) {
+            switch (response) {
+                case "chow-mein":
+                    dishPrice = 1.5;
+                    break;
+                case "orange-chicken":
+                    dishPrice = 3.5;
+                    break;
+                case "honey-walnut-shrimp":
+                    dishPrice = 3.0;
+                    break;
+                case "mushroom-chicken":
+                    dishPrice = 3.0;
+                    break;
+                case "broccoli-beef":
+                    dishPrice = 3.0;
+                    break;
+                default:
+                    event.reply("Invalid dish name.").queue();
+            }
+        }
+        if (dishPrice != 0.0) {
+            Dish dish = new Dish(response, dishPrice);
+            cart.addDish(dish);
+            event.reply(reply).queue();
+        }
     }
 }
