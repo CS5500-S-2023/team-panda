@@ -1,3 +1,7 @@
+/** This repsents a repository module in which we can choose whether we want to store objects
+ * in memory or in a database.
+ * We can do unit tests with InMemoryRepository only, since they have do the same thing
+ */
 package edu.northeastern.cs5500.starterbot.repository;
 
 import dagger.Module;

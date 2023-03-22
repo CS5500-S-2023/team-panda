@@ -1,3 +1,5 @@
+/** This represents an implementation of the generic repository.
+ * It uses hashMap to duplicate exactlly what mongoDB dose.*/
 package edu.northeastern.cs5500.starterbot.repository;
 
 import edu.northeastern.cs5500.starterbot.model.Model;
