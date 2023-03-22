@@ -1,3 +1,7 @@
+/**
+ * This MongoBD repository is an implementation of the generic repository that actually makes
+ * commands to MonggoDB
+ */
 package edu.northeastern.cs5500.starterbot.repository;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -19,6 +23,7 @@ public class MongoDBRepository<T extends Model> implements GenericRepository<T> 
 
     MongoCollection<T> collection;
 
+    /** Injections of a mongoBD service */
     @Inject
     public MongoDBRepository(Class<T> clazz, MongoDBService mongoDBService) {
         MongoDatabase mongoDatabase = mongoDBService.getMongoDatabase();

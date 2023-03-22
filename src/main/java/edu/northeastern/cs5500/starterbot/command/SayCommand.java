@@ -40,7 +40,7 @@ public class SayCommand implements SlashCommandHandler {
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /say"); // get called when type /say
-        var option = event.getOption("content");
+        var option = event.getOption("content"); // get what value of content
         if (option == null) {
             log.error("Received null value for mandatory parameter 'content'");
             return;
