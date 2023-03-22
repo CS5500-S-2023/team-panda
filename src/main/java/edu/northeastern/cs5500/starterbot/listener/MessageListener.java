@@ -1,4 +1,7 @@
-/**This represents the messageListeners. It has been decoupled, so we do not need to touch it when we add new commands. */
+/**
+ * This represents the messageListeners. It has been decoupled, so we do not need to touch it when
+ * we add new commands.
+ */
 package edu.northeastern.cs5500.starterbot.listener;
 
 import edu.northeastern.cs5500.starterbot.command.ButtonHandler;
@@ -20,9 +23,9 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 @Slf4j
 public class MessageListener extends ListenerAdapter {
-    // we don't have to add messageListener everytime we add a new command, 
+    // we don't have to add messageListener everytime we add a new command,
     // because every command will be in that set
-    @Inject Set<SlashCommandHandler> commands; 
+    @Inject Set<SlashCommandHandler> commands;
     @Inject Set<ButtonHandler> buttons;
     @Inject Set<StringSelectHandler> stringSelects;
 

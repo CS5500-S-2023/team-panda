@@ -1,4 +1,7 @@
-/** This MongoBD repository is an implementation of the generic repository that actually makes commands to MonggoDB */
+/**
+ * This MongoBD repository is an implementation of the generic repository that actually makes
+ * commands to MonggoDB
+ */
 package edu.northeastern.cs5500.starterbot.repository;
 
 import static com.mongodb.client.model.Filters.eq;

@@ -1,5 +1,6 @@
-/** This represents a generic repository that allows you to get, add, update, delete
- * and objects of particular types
+/**
+ * This represents a generic repository that allows you to get, add, update, delete and objects of
+ * particular types
  */
 package edu.northeastern.cs5500.starterbot.repository;
 
