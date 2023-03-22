@@ -14,7 +14,7 @@ public class Cart {
         items.add(dish);
     }
 
-    /** Get all dishes. */
+    /** Get all dishes in cart. */
     public List<Dish> getCart() {
         return items;
     }
