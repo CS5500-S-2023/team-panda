@@ -2,6 +2,7 @@ package edu.northeastern.cs5500.starterbot.command;
 
 import edu.northeastern.cs5500.starterbot.model.Cart;
 import edu.northeastern.cs5500.starterbot.model.Dish;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,10 +48,12 @@ public class CartCommand implements SlashCommandHandler {
         embedBuilder.setColor(0x1fab89); // You can change the color if you like
 
         double totalPrice = 0;
-        for (Dish dish : cart.getCart()) {
-            embedBuilder.addField(
-                    dish.getDishName(), String.format("$%.2f", dish.getPrice()), true);
-            totalPrice += dish.getPrice();
+        for (Map.Entry<Dish, Integer> entry : cart.getCart().entrySet()) {
+            Dish dish = entry.getKey();
+            int quantity = entry.getValue();
+            String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
+            embedBuilder.addField(itemName, String.format("$%.2f", dish.getPrice()), true);
+            totalPrice += dish.getPrice() * quantity;
         }
 
         embedBuilder.setFooter(String.format("Total Price: $%.2f", totalPrice));

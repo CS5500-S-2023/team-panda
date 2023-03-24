@@ -1,25 +1,24 @@
 package edu.northeastern.cs5500.starterbot.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class Cart {
-    private List<Dish> items;
+    private Map<Dish, Integer> items;
 
     @Inject
     public Cart() {
-        items = new ArrayList<>();
+        items = new HashMap<>();
     }
 
     public void addDish(Dish dish) {
-        items.add(dish);
+        items.put(dish, items.getOrDefault(dish, 0) + 1);
     }
 
-    /** Get all dishes in cart. */
-    public List<Dish> getCart() {
+    public Map<Dish, Integer> getCart() {
         return items;
     }
 
@@ -28,12 +27,6 @@ public class Cart {
     }
 
     public void deleteDish(String name) {
-        boolean deleted = false;
-        for (Dish dish : items) {
-            if ((dish.getDishName().equals(name)) && (!deleted)) {
-                items.remove(dish);
-                deleted = !deleted;
-            }
-        }
+        items.entrySet().removeIf(entry -> entry.getKey().getDishName().equals(name));
     }
 }
