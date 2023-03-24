@@ -16,10 +16,14 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 @Singleton
 @Slf4j
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
-    Cart cart = new Cart();
+    
+    private final Cart cart;
 
     @Inject
-    public MenuCommand() {}
+    public MenuCommand(Cart cart) {
+        this.cart = cart;
+    }
+
 
     @Override
     @Nonnull

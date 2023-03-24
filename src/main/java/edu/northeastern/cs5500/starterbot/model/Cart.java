@@ -2,10 +2,14 @@ package edu.northeastern.cs5500.starterbot.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class Cart {
     private List<Dish> items;
 
+    @Inject
     public Cart() {
         items = new ArrayList<>();
     }

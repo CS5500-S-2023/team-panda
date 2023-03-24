@@ -68,4 +68,10 @@ public class CommandModule {
     public StringSelectHandler provideMenuCommandMenuHandler(MenuCommand menuCommand) {
         return menuCommand;
     }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideCartCommand(CartCommand cartCommand) {
+        return cartCommand;
+    }
 }
