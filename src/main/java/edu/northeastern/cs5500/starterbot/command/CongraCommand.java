@@ -39,7 +39,6 @@ public class CongraCommand implements SlashCommandHandler {
     private void display(@Nonnull InteractionHook hook) {
         log.info("event: /congra");
 
-        number = 10;
         cart.clear();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Congratulation!");

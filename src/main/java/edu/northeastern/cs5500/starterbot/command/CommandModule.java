@@ -85,6 +85,6 @@ public class CommandModule {
     @Provides
     @Singleton
     public Integer provideInteger() {
-        return 10;
+        return 100;
     }
 }
