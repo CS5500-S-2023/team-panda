@@ -16,14 +16,13 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 @Singleton
 @Slf4j
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
-    
+
     private final Cart cart;
 
     @Inject
     public MenuCommand(Cart cart) {
         this.cart = cart;
     }
-
 
     @Override
     @Nonnull
@@ -44,11 +43,14 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         StringSelectMenu menu =
                 StringSelectMenu.create("menu")
                         .setPlaceholder("Please select your dishes.")
-                        .addOption("Chow Mein ($1.5)", "chow-mein")
-                        .addOption("Orange Chicken ($3.5)", "orange-chicken")
-                        .addOption("Honey Walnut Shrimp ($3)", "honey-walnut-shrimp")
-                        .addOption("Mushroom Chicken ($3)", "mushroom-chicken")
-                        .addOption("Broccoli Beef ($3)", "broccoli-beef")
+                        .addOption(
+                                "Chow Mein",
+                                "chow-mein",
+                                "$2.5") // modified price presentation for all dishes
+                        .addOption("Orange Chicken", "orange-chicken", "$4")
+                        .addOption("Honey Walnut Shrimp", "honey-walnut-shrimp", "$4.5")
+                        .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
+                        .addOption("Broccoli Beef", "broccoli-beef", "$4")
                         .build();
         event.reply("Please pick your dishes").setEphemeral(true).addActionRow(menu).queue();
     }
@@ -62,19 +64,19 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         if (!response.equals("")) {
             switch (response) {
                 case "chow-mein":
-                    dishPrice = 1.5;
+                    dishPrice = 2.5;
                     break;
                 case "orange-chicken":
-                    dishPrice = 3.5;
+                    dishPrice = 4.0;
                     break;
                 case "honey-walnut-shrimp":
-                    dishPrice = 3.0;
+                    dishPrice = 4.5;
                     break;
                 case "mushroom-chicken":
-                    dishPrice = 3.0;
+                    dishPrice = 3.5;
                     break;
                 case "broccoli-beef":
-                    dishPrice = 3.0;
+                    dishPrice = 4.0;
                     break;
                 default:
                     event.reply("Invalid dish name.").queue();
