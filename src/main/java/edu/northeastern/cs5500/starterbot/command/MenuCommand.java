@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
@@ -36,8 +37,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         return Commands.slash(getName(), "Show menu for users to select dishes.");
     }
 
-    @Override
-    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+    private void displayMenu(@Nonnull InteractionHook hook) {
         log.info("event: /menu");
 
         StringSelectMenu menu =
@@ -52,7 +52,16 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
                         .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
                         .addOption("Broccoli Beef", "broccoli-beef", "$4")
                         .build();
-        event.reply("Please pick your dishes").setEphemeral(true).addActionRow(menu).queue();
+        hook.sendMessage("Please pick your dishes").setEphemeral(true).addActionRow(menu).queue();
+    }
+
+    @Override
+    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+        displayMenu(event.getHook());
+    }
+
+    public void sendMenu(@Nonnull StringSelectInteractionEvent event) {
+        displayMenu(event.getHook());
     }
 
     @Override
@@ -88,23 +97,5 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
             cart.addDish(dish);
             event.reply(reply).queue();
         }
-    }
-
-    public void showMenu(@Nonnull StringSelectInteractionEvent event) {
-        log.info("event: /menu");
-
-        StringSelectMenu menu =
-                StringSelectMenu.create("menu")
-                        .setPlaceholder("Please select your dishes.")
-                        .addOption(
-                                "Chow Mein",
-                                "chow-mein",
-                                "$3") // modified price presentation for all dishes
-                        .addOption("Orange Chicken", "orange-chicken", "$4")
-                        .addOption("Honey Walnut Shrimp", "honey-walnut-shrimp", "$4.5")
-                        .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
-                        .addOption("Broccoli Beef", "broccoli-beef", "$4")
-                        .build();
-        event.reply("Please pick your dishes").setEphemeral(true).addActionRow(menu).queue();
     }
 }
