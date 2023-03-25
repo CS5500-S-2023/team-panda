@@ -2,16 +2,20 @@ package edu.northeastern.cs5500.starterbot.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class Cart {
     private Map<Dish, Integer> items;
+    private static AtomicInteger counter = new AtomicInteger(-1);
+    private int orderNumber;
 
     @Inject
     public Cart() {
         items = new HashMap<>();
+        this.orderNumber = getNextOrderNumber();
     }
 
     public void addDish(Dish dish) {
@@ -20,6 +24,15 @@ public class Cart {
 
     public Map<Dish, Integer> getCart() {
         return items;
+    }
+
+    public int getNextOrderNumber() {
+        orderNumber = counter.incrementAndGet();
+        return orderNumber;
+    }
+
+    public int getOrderNumber() {
+        return orderNumber;
     }
 
     public void clear() {

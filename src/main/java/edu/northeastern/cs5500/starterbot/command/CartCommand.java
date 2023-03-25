@@ -70,4 +70,8 @@ public class CartCommand implements SlashCommandHandler {
     public void sendCart(@Nonnull StringSelectInteractionEvent event) {
         displayCart(event.getHook());
     }
+
+    public Cart getCart() {
+        return cart;
+    }
 }
