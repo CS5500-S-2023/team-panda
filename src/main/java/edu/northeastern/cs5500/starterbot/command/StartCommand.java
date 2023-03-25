@@ -17,11 +17,14 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
 
     private final MenuCommand menuCommand;
     private final CartCommand cartCommand;
+    private final CongraCommand congraCommand;
 
     @Inject
-    public StartCommand(MenuCommand menuCommand, CartCommand cartCommand) {
+    public StartCommand(
+            MenuCommand menuCommand, CartCommand cartCommand, CongraCommand congraCommand) {
         this.menuCommand = menuCommand;
         this.cartCommand = cartCommand;
+        this.congraCommand = congraCommand;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
                 // Handle view queue action here
                 break;
             case "checkout":
-                // Handle checkout action here
+                congraCommand.sendCongra(event);
                 break;
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();

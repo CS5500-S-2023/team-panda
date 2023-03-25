@@ -4,6 +4,7 @@ package edu.northeastern.cs5500.starterbot.command;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import javax.inject.Singleton;
 
 @Module
 public class CommandModule {
@@ -73,5 +74,17 @@ public class CommandModule {
     @IntoSet
     public SlashCommandHandler provideCartCommand(CartCommand cartCommand) {
         return cartCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideCongraCommand(CongraCommand congraCommand) {
+        return congraCommand;
+    }
+
+    @Provides
+    @Singleton
+    public Integer provideInteger() {
+        return 10;
     }
 }
