@@ -59,12 +59,14 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
         final String response = event.getInteraction().getValues().get(0);
         Objects.requireNonNull(response);
 
+        event.deferReply().queue(); // Acknowledge the interaction first
+
         switch (response) {
             case "menu":
-                menuCommand.showMenu(event);
+                menuCommand.sendMenu(event);
                 break;
             case "view-cart":
-                cartCommand.showCart(event);
+                cartCommand.sendCart(event);
                 break;
             case "view-queue":
                 // Handle view queue action here
@@ -73,7 +75,7 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
                 // Handle checkout action here
                 break;
             default:
-                event.reply("Invalid option selected.").queue();
+                event.getHook().sendMessage("Invalid option selected.").queue();
         }
     }
 }
