@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
@@ -57,6 +58,32 @@ public class CartCommand implements SlashCommandHandler {
         }
 
         embedBuilder.setFooter(String.format("Total Price: $%.2f", totalPrice));
+        event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
+    }
+
+    public void showCart(@Nonnull StringSelectInteractionEvent event) {
+        log.info("event: /cart");
+
+        if (cart.getCart().isEmpty()) {
+            event.reply("Your cart is empty.").setEphemeral(true).queue();
+            return;
+        }
+
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Your Cart");
+        embedBuilder.setColor(0x1fab89); // You can change the color if you like
+
+        double totalPrice = 0;
+        for (Map.Entry<Dish, Integer> entry : cart.getCart().entrySet()) {
+            Dish dish = entry.getKey();
+            int quantity = entry.getValue();
+            String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
+            embedBuilder.addField(itemName, String.format("$%.2f", dish.getPrice()), true);
+            totalPrice += dish.getPrice() * quantity;
+        }
+
+        embedBuilder.setFooter(String.format("Total Price: $%.2f", totalPrice));
+
         event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
     }
 }

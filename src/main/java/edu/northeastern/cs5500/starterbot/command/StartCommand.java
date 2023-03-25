@@ -15,8 +15,14 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 @Slf4j
 public class StartCommand implements SlashCommandHandler, StringSelectHandler {
 
+    private final MenuCommand menuCommand;
+    private final CartCommand cartCommand;
+
     @Inject
-    public StartCommand() {}
+    public StartCommand(MenuCommand menuCommand, CartCommand cartCommand) {
+        this.menuCommand = menuCommand;
+        this.cartCommand = cartCommand;
+    }
 
     @Override
     @Nonnull
@@ -52,6 +58,22 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
     public void onStringSelectInteraction(@Nonnull StringSelectInteractionEvent event) {
         final String response = event.getInteraction().getValues().get(0);
         Objects.requireNonNull(response);
-        event.reply(response).queue();
+
+        switch (response) {
+            case "menu":
+                menuCommand.showMenu(event);
+                break;
+            case "view-cart":
+                cartCommand.showCart(event);
+                break;
+            case "view-queue":
+                // Handle view queue action here
+                break;
+            case "checkout":
+                // Handle checkout action here
+                break;
+            default:
+                event.reply("Invalid option selected.").queue();
+        }
     }
 }
