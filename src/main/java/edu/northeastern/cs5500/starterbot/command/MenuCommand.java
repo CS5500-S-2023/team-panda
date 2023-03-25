@@ -43,10 +43,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         StringSelectMenu menu =
                 StringSelectMenu.create("menu")
                         .setPlaceholder("Please select your dishes.")
-                        .addOption(
-                                "Chow Mein",
-                                "chow-mein",
-                                "$2.5") // modified price presentation for all dishes
+                        .addOption("Chow Mein", "chow-mein", "$3") // modified price presentation for all dishes
                         .addOption("Orange Chicken", "orange-chicken", "$4")
                         .addOption("Honey Walnut Shrimp", "honey-walnut-shrimp", "$4.5")
                         .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
@@ -64,7 +61,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         if (!response.equals("")) {
             switch (response) {
                 case "chow-mein":
-                    dishPrice = 2.5;
+                    dishPrice = 3.0;
                     break;
                 case "orange-chicken":
                     dishPrice = 4.0;
