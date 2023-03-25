@@ -36,4 +36,3 @@ public class Dish {
         return Objects.hash(name, price);
     }
 }
-

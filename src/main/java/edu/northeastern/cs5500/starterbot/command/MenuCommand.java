@@ -43,7 +43,10 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         StringSelectMenu menu =
                 StringSelectMenu.create("menu")
                         .setPlaceholder("Please select your dishes.")
-                        .addOption("Chow Mein", "chow-mein", "$3") // modified price presentation for all dishes
+                        .addOption(
+                                "Chow Mein",
+                                "chow-mein",
+                                "$3") // modified price presentation for all dishes
                         .addOption("Orange Chicken", "orange-chicken", "$4")
                         .addOption("Honey Walnut Shrimp", "honey-walnut-shrimp", "$4.5")
                         .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
@@ -79,6 +82,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
                     event.reply("Invalid dish name.").queue();
             }
         }
+
         if (dishPrice != 0.0) {
             Dish dish = new Dish(response, dishPrice);
             cart.addDish(dish);
