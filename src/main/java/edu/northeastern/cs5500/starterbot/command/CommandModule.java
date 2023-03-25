@@ -83,6 +83,12 @@ public class CommandModule {
     }
 
     @Provides
+    @IntoSet
+    public SlashCommandHandler provideQueueCommand(QueueCommand queueCommand) {
+        return queueCommand;
+    }
+
+    @Provides
     @Singleton
     public Integer provideInteger() {
         return 100;

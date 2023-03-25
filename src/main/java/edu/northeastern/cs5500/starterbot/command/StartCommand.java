@@ -18,13 +18,18 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
     private final MenuCommand menuCommand;
     private final CartCommand cartCommand;
     private final CongraCommand congraCommand;
+    private final QueueCommand queueCommand;
 
     @Inject
     public StartCommand(
-            MenuCommand menuCommand, CartCommand cartCommand, CongraCommand congraCommand) {
+            MenuCommand menuCommand,
+            CartCommand cartCommand,
+            CongraCommand congraCommand,
+            QueueCommand queueCommand) {
         this.menuCommand = menuCommand;
         this.cartCommand = cartCommand;
         this.congraCommand = congraCommand;
+        this.queueCommand = queueCommand;
     }
 
     @Override
@@ -72,7 +77,7 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
                 cartCommand.sendCart(event);
                 break;
             case "view-queue":
-                // Handle view queue action here
+                queueCommand.sendQueue(event);
                 break;
             case "checkout":
                 congraCommand.sendCongra(event);
