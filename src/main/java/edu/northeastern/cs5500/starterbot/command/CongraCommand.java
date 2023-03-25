@@ -16,12 +16,12 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 @Slf4j
 public class CongraCommand implements SlashCommandHandler {
     private final Cart cart;
-    private Integer number;
+    private Integer orderNumber;
 
     @Inject
-    public CongraCommand(Integer number, Cart cart) {
-        this.number = number;
+    public CongraCommand(Cart cart) {
         this.cart = cart;
+        this.orderNumber = cart.getOrderNumber();
     }
 
     @Override
@@ -43,7 +43,10 @@ public class CongraCommand implements SlashCommandHandler {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Congratulation!");
         embedBuilder.setColor(0x1fab89);
-        embedBuilder.addField("Your order number is: ", String.valueOf(number), true);
+        embedBuilder.addField(
+                "Your order has been placed.",
+                "Order number: " + String.valueOf(orderNumber),
+                true);
 
         hook.sendMessageEmbeds(embedBuilder.build()).setEphemeral(true).queue();
     }
@@ -53,7 +56,8 @@ public class CongraCommand implements SlashCommandHandler {
         display(event.getHook());
     }
 
-    public void sendCongra(@Nonnull StringSelectInteractionEvent event) {
+    public void sendCongra(@Nonnull StringSelectInteractionEvent event, int number) {
+        orderNumber = number;
         display(event.getHook());
     }
 }
