@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 @Singleton
 @Slf4j
-public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
+public class MenuCommand implements SlashCommandHandler, StringSelectHandler, ButtonHandler {
 
     private final Cart cart;
 
@@ -96,6 +96,17 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
             Dish dish = new Dish(response, dishPrice);
             cart.addDish(dish);
             event.reply(reply).queue();
+        }
+    }
+
+    @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        final String response = event.getButton().getId();
+        Objects.requireNonNull(response);
+        String handlerName = response.split(":")[1];
+
+        if (handlerName.equals(getName())) {
+            sendMenu(event);
         }
     }
 }
