@@ -8,15 +8,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import org.jetbrains.annotations.NotNull;
 
 @Singleton
 @Slf4j
-public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
+public class MenuCommand implements SlashCommandHandler, StringSelectHandler, ButtonHandler {
 
     private final Cart cart;
 
@@ -64,6 +66,10 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         displayMenu(event.getHook());
     }
 
+    public void sendMenu(@Nonnull ButtonInteractionEvent event) {
+        displayMenu(event.getHook());
+    }
+
     @Override
     public void onStringSelectInteraction(@Nonnull StringSelectInteractionEvent event) {
         final String response = event.getInteraction().getValues().get(0);
@@ -96,6 +102,17 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
             Dish dish = new Dish(response, dishPrice);
             cart.addDish(dish);
             event.reply(reply).queue();
+        }
+    }
+
+    @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        final String response = event.getButton().getId();
+        Objects.requireNonNull(response);
+        String handlerName = response.split(":")[1];
+
+        if (handlerName.equals(getName())) {
+            sendMenu(event);
         }
     }
 }

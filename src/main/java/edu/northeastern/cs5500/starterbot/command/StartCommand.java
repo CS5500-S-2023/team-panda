@@ -5,11 +5,13 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 @Singleton
 @Slf4j
@@ -46,17 +48,22 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /start");
 
-        StringSelectMenu menu =
-                StringSelectMenu.create("start")
-                        .setPlaceholder(
-                                "Choose what you need.") // shows the placeholder indicating what
-                        // this menu is for
-                        .addOption("Menu", "menu")
-                        .addOption("View Cart", "view-cart")
-                        .addOption("View Queue", "view-queue")
-                        .addOption("Checkout", "checkout")
-                        .build();
-        event.reply("Let's start your order!").setEphemeral(true).addActionRow(menu).queue();
+        EmbedBuilder embedBuilder =
+                new EmbedBuilder()
+                        .setTitle("Welcome to the Panda Bot!")
+                        .setDescription("Choose what you need.")
+                        .setThumbnail(
+                                "https://img.freepik.com/premium-vector/panda-food-logo_272290-267.jpg");
+
+        MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
+        messageCreateBuilder =
+                messageCreateBuilder.addActionRow(
+                        Button.primary(this.getName() + ":menu", "Menu"),
+                        Button.primary(this.getName() + ":view-cart", "View Cart"),
+                        Button.danger(this.getName() + ":cancel", "Cancel"));
+
+        messageCreateBuilder.setContent("").setEmbeds(embedBuilder.build());
+        event.reply(messageCreateBuilder.build()).queue();
     }
 
     @Override
