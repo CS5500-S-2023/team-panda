@@ -44,6 +44,10 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
                 getName(), "Provide a start page to users"); // Changed command description
     }
 
+    /**
+     * Rivised the start page implemented by buttons rather than dropdown. Added a picture
+     * from online src. There are three buttons in the start page: menu, cart, and cancel.
+     */
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /start");
