@@ -88,4 +88,10 @@ public class CommandModule {
     public Integer provideInteger(Cart cart) {
         return cart.getOrderNumber();
     }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideQueueCommand(QueueCommand queueCommand) {
+        return queueCommand;
+    }
 }
