@@ -26,6 +26,17 @@ public class Cart {
         return items;
     }
 
+    public double getTotalPrice() {
+        double totalPrice = 0;
+        for (Map.Entry<Dish, Integer> entry : items.entrySet()) {
+            Dish dish = entry.getKey();
+            int count = entry.getValue();
+            double price = dish.getPrice();
+            totalPrice += price * count;
+        }
+        return totalPrice;
+    }
+
     public int getNextOrderNumber() {
         orderNumber = counter.incrementAndGet();
         return orderNumber;

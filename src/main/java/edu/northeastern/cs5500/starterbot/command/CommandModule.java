@@ -85,6 +85,18 @@ public class CommandModule {
 
     @Provides
     @IntoSet
+    public SlashCommandHandler provideCheckoutCommand(CheckoutCommand checkoutCommand) {
+        return checkoutCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler provideCheckoutCommandClickHandler(CheckoutCommand checkoutCommand) {
+        return checkoutCommand;
+    }
+
+    @Provides
+    @IntoSet
     public SlashCommandHandler provideCongraCommand(CongraCommand congraCommand) {
         return congraCommand;
     }

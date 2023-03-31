@@ -23,10 +23,12 @@ import org.jetbrains.annotations.NotNull;
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler, ButtonHandler {
 
     private final Cart cart;
+    // private final CheckoutCommand checkoutCommand;
 
     @Inject
     public MenuCommand(Cart cart) {
         this.cart = cart;
+        // this.checkoutCommand = checkoutCommand;
     }
 
     @Override
@@ -132,7 +134,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
                 // To be finished
                 break;
             case "checkout":
-                // To be finished
+                // checkoutCommand.sendCheckout(event);
                 break;
             case "cancel":
                 // Handle cancel action here
