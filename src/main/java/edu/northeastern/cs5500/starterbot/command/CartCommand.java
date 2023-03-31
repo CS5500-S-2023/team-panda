@@ -88,8 +88,10 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
                 menuCommand.sendMenu(event);
                 break;
             case "delete":
+                // To be finished
                 break;
             case "checkout":
+                // To be finished
                 break;
             case "cancel":
                 // Handle cancel action here
@@ -99,6 +101,10 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         }
     }
 
+    /**
+     * Menu can be sent when somebody clicked a button.
+     * @param event
+     */
     public void sendCart(@Nonnull ButtonInteractionEvent event) {
         displayCart(event.getHook());
     }

@@ -56,13 +56,11 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
                         .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
                         .addOption("Broccoli Beef", "broccoli-beef", "$4")
                         .build();
-        // hook.sendMessage("Please pick your
-        // dishes").setEphemeral(true).addActionRow(menu).queue();
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder =
                 messageCreateBuilder
-                        .addActionRow(menu)
+                        .addActionRow(menu)  //add menu to messageCreateBuilder
                         .addActionRow(
                                 Button.primary("delete", "Delete"),
                                 Button.success("checkout", "Checkout"),
@@ -80,6 +78,10 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
         displayMenu(event.getHook());
     }
 
+    /**
+     * Menu can be sent when somebody clicked a button.
+     * @param event
+     */
     public void sendMenu(@Nonnull ButtonInteractionEvent event) {
         displayMenu(event.getHook());
     }
@@ -126,8 +128,10 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
 
         switch (response) {
             case "delete":
+                // To be finished
                 break;
             case "checkout":
+                // To be finished
                 break;
             case "cancel":
                 // Handle cancel action here
