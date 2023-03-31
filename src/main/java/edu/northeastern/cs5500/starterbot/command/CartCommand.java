@@ -103,6 +103,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
 
     /**
      * Menu can be sent when somebody clicked a button.
+     *
      * @param event
      */
     public void sendCart(@Nonnull ButtonInteractionEvent event) {

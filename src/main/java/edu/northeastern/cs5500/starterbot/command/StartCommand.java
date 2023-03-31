@@ -45,26 +45,26 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
     }
 
     /**
-     * Rivised the start page implemented by buttons rather than dropdown. Added a
-     * picture from
-     * online src. There are three buttons in the start page: menu, cart, and
-     * cancel.
+     * Rivised the start page implemented by buttons rather than dropdown. Added a picture from
+     * online src. There are three buttons in the start page: menu, cart, and cancel.
      */
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /start");
 
-        EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setTitle("Welcome to the Panda Bot!")
-                .setDescription("Choose what you need.")
-                .setThumbnail(
-                        "https://img.freepik.com/premium-vector/panda-food-logo_272290-267.jpg");
+        EmbedBuilder embedBuilder =
+                new EmbedBuilder()
+                        .setTitle("Welcome to the Panda Bot!")
+                        .setDescription("Choose what you need.")
+                        .setThumbnail(
+                                "https://img.freepik.com/premium-vector/panda-food-logo_272290-267.jpg");
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        messageCreateBuilder = messageCreateBuilder.addActionRow(
-                Button.primary(this.getName() + ":menu", "Menu"),
-                Button.primary(this.getName() + ":view-cart", "View Cart"),
-                Button.danger(this.getName() + ":cancel", "Cancel"));
+        messageCreateBuilder =
+                messageCreateBuilder.addActionRow(
+                        Button.primary(this.getName() + ":menu", "Menu"),
+                        Button.primary(this.getName() + ":view-cart", "View Cart"),
+                        Button.danger(this.getName() + ":cancel", "Cancel"));
 
         messageCreateBuilder.setContent("").setEmbeds(embedBuilder.build());
         event.reply(messageCreateBuilder.build()).queue();
@@ -87,11 +87,11 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
             case "cancel":
                 // Handle cancel action here
                 break;
-            // case "checkout":
-            // int orderNumber = cartCommand.getCart().getNextOrderNumber();
-            // globalCongraCommand.sendCongra(event, orderNumber);
-            // break;
-            // I'm not sure if we will use checkout, just keep it here
+                // case "checkout":
+                // int orderNumber = cartCommand.getCart().getNextOrderNumber();
+                // globalCongraCommand.sendCongra(event, orderNumber);
+                // break;
+                // I'm not sure if we will use checkout, just keep it here
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();
         }

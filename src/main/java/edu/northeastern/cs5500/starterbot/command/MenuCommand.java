@@ -60,7 +60,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder =
                 messageCreateBuilder
-                        .addActionRow(menu)  //add menu to messageCreateBuilder
+                        .addActionRow(menu) // add menu to messageCreateBuilder
                         .addActionRow(
                                 Button.primary("delete", "Delete"),
                                 Button.success("checkout", "Checkout"),
@@ -80,6 +80,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
 
     /**
      * Menu can be sent when somebody clicked a button.
+     *
      * @param event
      */
     public void sendMenu(@Nonnull ButtonInteractionEvent event) {
