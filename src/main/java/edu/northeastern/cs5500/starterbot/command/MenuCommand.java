@@ -13,7 +13,9 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.jetbrains.annotations.NotNull;
 
 @Singleton
@@ -54,7 +56,19 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
                         .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
                         .addOption("Broccoli Beef", "broccoli-beef", "$4")
                         .build();
-        hook.sendMessage("Please pick your dishes").setEphemeral(true).addActionRow(menu).queue();
+        // hook.sendMessage("Please pick your
+        // dishes").setEphemeral(true).addActionRow(menu).queue();
+
+        MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
+        messageCreateBuilder =
+                messageCreateBuilder
+                        .addActionRow(menu)
+                        .addActionRow(
+                                Button.primary("delete", "Delete"),
+                                Button.success("checkout", "Checkout"),
+                                Button.danger("cancel", "Cancel"));
+
+        hook.sendMessage(messageCreateBuilder.build()).queue();
     }
 
     @Override
@@ -107,12 +121,19 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        final String response = event.getButton().getId();
+        final String response = event.getButton().getId().split(":")[1];
         Objects.requireNonNull(response);
-        String handlerName = response.split(":")[1];
 
-        if (handlerName.equals(getName())) {
-            sendMenu(event);
+        switch (response) {
+            case "delete":
+                break;
+            case "checkout":
+                break;
+            case "cancel":
+                // Handle cancel action here
+                break;
+            default:
+                event.getHook().sendMessage("Invalid option selected.").queue();
         }
     }
 }
