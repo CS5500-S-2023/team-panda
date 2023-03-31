@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -57,6 +58,11 @@ public class CongraCommand implements SlashCommandHandler {
     }
 
     public void sendCongra(@Nonnull StringSelectInteractionEvent event, int number) {
+        orderNumber = number;
+        display(event.getHook());
+    }
+
+    public void sendCongra(@Nonnull ButtonInteractionEvent event, int number) {
         orderNumber = number;
         display(event.getHook());
     }
