@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 @Singleton
 @Slf4j
-public class StartCommand implements SlashCommandHandler, StringSelectHandler {
+public class StartCommand implements SlashCommandHandler, ButtonHandler {
 
     private final MenuCommand menuCommand;
     private final CartCommand cartCommand;
@@ -71,8 +71,8 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
     }
 
     @Override
-    public void onStringSelectInteraction(@Nonnull StringSelectInteractionEvent event) {
-        final String response = event.getInteraction().getValues().get(0);
+    public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
+        final String response = event.getButton().getId().split(":")[1];
         Objects.requireNonNull(response);
 
         event.deferReply().queue(); // Acknowledge the interaction first
@@ -84,13 +84,14 @@ public class StartCommand implements SlashCommandHandler, StringSelectHandler {
             case "view-cart":
                 cartCommand.sendCart(event);
                 break;
-            case "view-queue":
-                // Handle view queue action here
+            case "cancel":
+                // Handle cancel action here
                 break;
-            case "checkout":
-                int orderNumber = cartCommand.getCart().getNextOrderNumber();
-                globalCongraCommand.sendCongra(event, orderNumber);
-                break;
+                // case "checkout":
+                // int orderNumber = cartCommand.getCart().getNextOrderNumber();
+                // globalCongraCommand.sendCongra(event, orderNumber);
+                // break;
+                // I'm not sure if we will use checkout, just keep it here
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();
         }

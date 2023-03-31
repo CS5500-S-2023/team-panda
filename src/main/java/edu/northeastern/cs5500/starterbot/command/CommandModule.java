@@ -55,7 +55,7 @@ public class CommandModule {
 
     @Provides
     @IntoSet
-    public StringSelectHandler provideStartCommandMenuHandler(StartCommand startCommand) {
+    public ButtonHandler provideStartCommandMenuHandler(StartCommand startCommand) {
         return startCommand;
     }
 
@@ -74,6 +74,12 @@ public class CommandModule {
     @Provides
     @IntoSet
     public SlashCommandHandler provideCartCommand(CartCommand cartCommand) {
+        return cartCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler provideCartCommandClickHandler(CartCommand cartCommand) {
         return cartCommand;
     }
 
