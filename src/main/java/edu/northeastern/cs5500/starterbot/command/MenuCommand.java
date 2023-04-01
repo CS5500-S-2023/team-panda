@@ -5,6 +5,7 @@ import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -21,11 +22,13 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
 
     private final Cart cart;
+    private final Provider<CartCommand> cartCommandProvider;
     // private final CheckoutCommand checkoutCommand;
 
     @Inject
-    public MenuCommand(Cart cart) {
+    public MenuCommand(Cart cart, Provider<CartCommand> cartCommandProvider) {
         this.cart = cart;
+        this.cartCommandProvider = cartCommandProvider;
         // this.checkoutCommand = checkoutCommand;
     }
 
@@ -118,6 +121,8 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
             cart.addDish(dish);
             event.reply(reply).queue();
         }
+
+        cartCommandProvider.get().displayCart(event.getHook());
     }
 
     // deleted button interaction

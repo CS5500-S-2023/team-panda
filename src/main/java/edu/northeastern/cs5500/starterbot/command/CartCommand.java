@@ -5,6 +5,7 @@ import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -21,11 +22,14 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 public class CartCommand implements SlashCommandHandler, ButtonHandler {
     private final Cart cart;
     private final MenuCommand menuCommand;
+    private final Provider<MenuCommand> menuCommandProvider;
 
     @Inject
-    public CartCommand(Cart cart, MenuCommand menuCommand) {
+    public CartCommand(
+            Cart cart, MenuCommand menuCommand, Provider<MenuCommand> menuCommandProvider) {
         this.cart = cart;
         this.menuCommand = menuCommand;
+        this.menuCommandProvider = menuCommandProvider;
     }
 
     @Override
@@ -40,7 +44,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         return Commands.slash(getName(), "Display all dishes added to the cart.");
     }
 
-    private void displayCart(@Nonnull InteractionHook hook) {
+    public void displayCart(@Nonnull InteractionHook hook) {
         log.info("event: /cart");
 
         if (cart.getCart().isEmpty()) {
