@@ -106,7 +106,6 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
                 checkoutCommandProvider.get().sendCheckout(event);
                 break;
             case "cancel":
-                // Handle cancel action here
                 clearCart(event);
                 break;
             default:
