@@ -122,7 +122,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
     public void clearCart(ButtonInteractionEvent event) {
         cart.clear();
         event.getHook()
-                .sendMessage("Your cart has been cleared. Returning to the initial state.")
+                .sendMessage("Your cart has been cleared. Thanks for visiting FoodiePanda.")
                 .queue();
     }
 }

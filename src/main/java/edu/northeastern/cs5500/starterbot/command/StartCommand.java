@@ -90,7 +90,7 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
 
                 // Send a message to the user to confirm that the operation was cancelled
                 event.getHook()
-                        .sendMessage("Operation cancelled. Returning to the initial state.")
+                        .sendMessage(" Thank you for visiting FoodiePanda, please come again.")
                         .queue();
                 break;
                 // case "checkout":
