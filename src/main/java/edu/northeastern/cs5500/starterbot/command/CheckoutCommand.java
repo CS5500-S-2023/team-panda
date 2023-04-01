@@ -99,7 +99,7 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
                 cartCommand.sendCart(event);
                 break;
             case "cancel":
-                // Handle cancel action here
+                cartCommand.clearCart(event);
                 break;
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();
