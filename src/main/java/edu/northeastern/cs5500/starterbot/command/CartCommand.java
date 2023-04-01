@@ -23,13 +23,18 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
     private final Cart cart;
     private final MenuCommand menuCommand;
     private final Provider<MenuCommand> menuCommandProvider;
+    private final Provider<CheckoutCommand> checkoutCommandProvider;
 
     @Inject
     public CartCommand(
-            Cart cart, MenuCommand menuCommand, Provider<MenuCommand> menuCommandProvider) {
+            Cart cart,
+            MenuCommand menuCommand,
+            Provider<MenuCommand> menuCommandProvider,
+            Provider<CheckoutCommand> checkoutCommandProvider) {
         this.cart = cart;
         this.menuCommand = menuCommand;
         this.menuCommandProvider = menuCommandProvider;
+        this.checkoutCommandProvider = checkoutCommandProvider;
     }
 
     @Override
@@ -95,7 +100,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
                 // To be finished
                 break;
             case "checkout":
-                // checkoutSender.sendCheckout(event);
+                checkoutCommandProvider.get().sendCheckout(event);
                 break;
             case "cancel":
                 // Handle cancel action here
