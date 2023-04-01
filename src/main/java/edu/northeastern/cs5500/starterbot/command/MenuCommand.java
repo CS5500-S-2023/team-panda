@@ -13,14 +13,12 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
-import org.jetbrains.annotations.NotNull;
 
 @Singleton
 @Slf4j
-public class MenuCommand implements SlashCommandHandler, StringSelectHandler, ButtonHandler {
+public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
 
     private final Cart cart;
     // private final CheckoutCommand checkoutCommand;
@@ -48,7 +46,9 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
 
         StringSelectMenu menu =
                 StringSelectMenu.create("menu")
-                        .setPlaceholder("Please select your dishes.")
+                        .setPlaceholder(
+                                "Click to add a dish to your cart.") // modified the placeholder to
+                        // provide a clearer guidance
                         .addOption(
                                 "Chow Mein",
                                 "chow-mein",
@@ -61,12 +61,8 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder =
-                messageCreateBuilder
-                        .addActionRow(menu) // add menu to messageCreateBuilder
-                        .addActionRow(
-                                Button.primary("delete", "Delete"),
-                                Button.success("checkout", "Checkout"),
-                                Button.danger("cancel", "Cancel"));
+                messageCreateBuilder.addActionRow(menu); // add menu to messageCreateBuilder
+        // deleted three buttons
 
         hook.sendMessage(messageCreateBuilder.build()).queue();
     }
@@ -124,23 +120,5 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler, Bu
         }
     }
 
-    @Override
-    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        final String response = event.getButton().getId().split(":")[1];
-        Objects.requireNonNull(response);
-
-        switch (response) {
-            case "delete":
-                // To be finished
-                break;
-            case "checkout":
-                // checkoutCommand.sendCheckout(event);
-                break;
-            case "cancel":
-                // Handle cancel action here
-                break;
-            default:
-                event.getHook().sendMessage("Invalid option selected.").queue();
-        }
-    }
+    // deleted button interaction
 }
