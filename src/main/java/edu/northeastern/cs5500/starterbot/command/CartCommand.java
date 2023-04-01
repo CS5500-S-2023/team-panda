@@ -99,6 +99,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
                 break;
             case "cancel":
                 // Handle cancel action here
+                clearCart(event);
                 break;
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();
@@ -116,5 +117,12 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
 
     public Cart getCart() {
         return cart;
+    }
+
+    public void clearCart(ButtonInteractionEvent event) {
+        cart.clear();
+        event.getHook()
+                .sendMessage("Your cart has been cleared. Thanks for visiting FoodiePanda.")
+                .queue();
     }
 }
