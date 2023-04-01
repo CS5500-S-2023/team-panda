@@ -97,6 +97,12 @@ public class CommandModule {
 
     @Provides
     @IntoSet
+    public StringSelectHandler provideDeleteCommandClickHandler(DeleteCommand deleteCommand) {
+        return deleteCommand;
+    }
+
+    @Provides
+    @IntoSet
     public SlashCommandHandler provideCongraCommand(CongraCommand congraCommand) {
         return congraCommand;
     }

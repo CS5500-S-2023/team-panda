@@ -50,7 +50,7 @@ public class Cart {
         items.clear();
     }
 
-    public void deleteDish(String name) {
-        items.entrySet().removeIf(entry -> entry.getKey().getDishName().equals(name));
+    public void deleteDish(Dish dish) {
+        items.remove(dish);
     }
 }
