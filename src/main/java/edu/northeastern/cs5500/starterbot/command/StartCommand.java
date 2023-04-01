@@ -85,7 +85,13 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
                 cartCommand.sendCart(event);
                 break;
             case "cancel":
-                // Handle cancel action here
+                // Reset the bot's state to the initial state
+                resetBotState();
+
+                // Send a message to the user to confirm that the operation was cancelled
+                event.getHook()
+                        .sendMessage("Operation cancelled. Returning to the initial state.")
+                        .queue();
                 break;
                 // case "checkout":
                 // int orderNumber = cartCommand.getCart().getNextOrderNumber();
@@ -95,5 +101,11 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();
         }
+    }
+
+    /** Resets the bot's state to the initial state. */
+    private void resetBotState() {
+        // Reset any relevant state variables here
+        cartCommand.getCart().clear();
     }
 }
