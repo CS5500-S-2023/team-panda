@@ -52,35 +52,48 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         return Commands.slash(getName(), "Display all dishes added to the cart.");
     }
 
+    /**
+     * If the cart is empty, display the total price as 0 and provide the user options to menu and
+     * cancel. If there is something in the cart, list them and display the total price and provide
+     * the user options to add more, delete, checkout, and cancel.
+     *
+     * @param hook
+     */
     public void displayCart(@Nonnull InteractionHook hook) {
         log.info("event: /cart");
 
-        if (cart.getCart().isEmpty()) {
-            hook.sendMessage("Your cart is empty.").setEphemeral(true).queue();
-            return;
-        }
-
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Your Cart");
-        embedBuilder.setColor(0x1fab89); // You can change the color if you like
+        embedBuilder.setColor(0x1fab89);
 
         double totalPrice = 0;
-        for (Map.Entry<Dish, Integer> entry : cart.getCart().entrySet()) {
-            Dish dish = entry.getKey();
-            int quantity = entry.getValue();
-            String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
-            embedBuilder.addField(itemName, String.format("$%.2f", dish.getPrice()), true);
-            totalPrice += dish.getPrice() * quantity;
+        if (!cart.getCart().isEmpty()) {
+            for (Map.Entry<Dish, Integer> entry : cart.getCart().entrySet()) {
+                Dish dish = entry.getKey();
+                int quantity = entry.getValue();
+                String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
+                embedBuilder.addField(itemName, String.format("$%.2f", dish.getPrice()), false);
+                totalPrice += dish.getPrice() * quantity;
+            }
+        } else {
+            embedBuilder.setDescription("Your cart is empty.");
         }
         embedBuilder.setFooter(String.format("Total Price: $%.2f", totalPrice));
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        messageCreateBuilder =
-                messageCreateBuilder.addActionRow(
-                        Button.primary(this.getName() + ":add-more", "Add More"),
-                        Button.primary(this.getName() + ":delete", "Delete"),
-                        Button.success(this.getName() + ":checkout", "Checkout"),
-                        Button.danger(this.getName() + ":cancel", "Cancel"));
+        if (!cart.getCart().isEmpty()) {
+            messageCreateBuilder =
+                    messageCreateBuilder.addActionRow(
+                            Button.primary(this.getName() + ":add-more", "Add More"),
+                            Button.primary(this.getName() + ":delete", "Delete"),
+                            Button.success(this.getName() + ":checkout", "Checkout"),
+                            Button.danger(this.getName() + ":cancel", "Cancel"));
+        } else {
+            messageCreateBuilder =
+                    messageCreateBuilder.addActionRow(
+                            Button.primary(this.getName() + ":add-more", "Menu"),
+                            Button.danger(this.getName() + ":cancel", "Cancel"));
+        }
 
         messageCreateBuilder.setContent("").setEmbeds(embedBuilder.build());
         hook.sendMessage(messageCreateBuilder.build()).queue();
