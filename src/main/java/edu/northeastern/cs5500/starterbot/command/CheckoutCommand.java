@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.command;
 
+import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Cart;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -22,12 +23,15 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
     private final CartCommand cartCommand;
     private final CongraCommand congraCommand;
     private final CongraCommand globalCongraCommand;
+    private final CartController cartController;
 
     @Inject
-    public CheckoutCommand(CartCommand cartCommand, CongraCommand congraCommand) {
+    public CheckoutCommand(
+            CartCommand cartCommand, CartController cartController, CongraCommand congraCommand) {
         this.cartCommand = cartCommand;
         this.congraCommand = congraCommand;
-        this.globalCongraCommand = new CongraCommand(cartCommand.getCart());
+        this.cartController = cartController;
+        this.globalCongraCommand = new CongraCommand(cartController);
     }
 
     @Override
@@ -42,10 +46,10 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
         return Commands.slash(getName(), "Please checkout here."); // Changed command description
     }
 
-    private void display(@Nonnull InteractionHook hook) {
+    private void display(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /checkout");
 
-        Cart cart = cartCommand.getCart();
+        Cart cart = cartController.getCartForUser(discordUserId);
         EmbedBuilder embedBuilder =
                 new EmbedBuilder()
                         .setTitle("Total Price: " + String.format("$%.2f", cart.getTotalPrice()));
@@ -67,7 +71,8 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
         // If you are using hook, please use the upper line and delete the following.
         log.info("event: /checkout");
 
-        Cart cart = cartCommand.getCart();
+        String discordUserId = event.getUser().getId();
+        Cart cart = cartController.getCartForUser(discordUserId);
         EmbedBuilder embedBuilder =
                 new EmbedBuilder()
                         .setTitle("Total Price: " + String.format("$%.2f", cart.getTotalPrice()));
@@ -87,12 +92,14 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
         final String response = event.getButton().getId().split(":")[1];
         Objects.requireNonNull(response);
+        String discordUserId = event.getUser().getId();
+        Cart cart = cartController.getCartForUser(discordUserId);
 
         event.deferReply().queue(); // Acknowledge the interaction first
 
         switch (response) {
             case "make-payment":
-                int orderNumber = cartCommand.getCart().getNextOrderNumber();
+                int orderNumber = cart.getNextOrderNumber();
                 globalCongraCommand.sendCongra(event, orderNumber);
                 break;
             case "cart":
@@ -107,6 +114,7 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
     }
 
     public void sendCheckout(@Nonnull ButtonInteractionEvent event) {
-        display(event.getHook());
+        String discordUserId = event.getUser().getId();
+        display(event.getHook(), discordUserId);
     }
 }

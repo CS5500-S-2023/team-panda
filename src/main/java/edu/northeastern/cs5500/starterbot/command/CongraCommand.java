@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.command;
 
+import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Cart;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,13 +17,14 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 @Singleton
 @Slf4j
 public class CongraCommand implements SlashCommandHandler {
-    private final Cart cart;
+    // Substituted a cart with a cartController
+    private final CartController cartController;
     private Integer orderNumber;
 
     @Inject
-    public CongraCommand(Cart cart) {
-        this.cart = cart;
-        this.orderNumber = cart.getOrderNumber();
+    public CongraCommand(CartController cartController) {
+        this.cartController = cartController;
+        // this.orderNumber = cart.getOrderNumber();
     }
 
     @Override
@@ -37,10 +39,12 @@ public class CongraCommand implements SlashCommandHandler {
         return Commands.slash(getName(), "Checkout successfully!");
     }
 
-    private void display(@Nonnull InteractionHook hook) {
+    private void display(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /congra");
 
-        cart.clear();
+        // cart.clear();
+        Integer orderNumber = cartController.getCartForUser(discordUserId).getOrderNumber();
+        cartController.clearCart(discordUserId);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Congratulation!");
         embedBuilder.setColor(0x1fab89);
@@ -54,16 +58,25 @@ public class CongraCommand implements SlashCommandHandler {
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        display(event.getHook());
+        String discordUserId = event.getUser().getId();
+        display(event.getHook(), discordUserId);
     }
 
     public void sendCongra(@Nonnull StringSelectInteractionEvent event, int number) {
         orderNumber = number;
-        display(event.getHook());
+        String discordUserId = event.getUser().getId();
+        Cart cart =
+                cartController.getCartForUser(
+                        discordUserId); // set order number using cartController not cart
+        cart.setOrderNumber(number);
+        display(event.getHook(), discordUserId);
     }
 
     public void sendCongra(@Nonnull ButtonInteractionEvent event, int number) {
         orderNumber = number;
-        display(event.getHook());
+        String discordUserId = event.getUser().getId();
+        Cart cart = cartController.getCartForUser(discordUserId);
+        cart.setOrderNumber(number);
+        display(event.getHook(), discordUserId);
     }
 }
