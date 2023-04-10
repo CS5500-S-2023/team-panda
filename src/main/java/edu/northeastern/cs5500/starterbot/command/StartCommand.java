@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.command;
 
+import edu.northeastern.cs5500.starterbot.controller.CartController;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,15 +21,20 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
     private final MenuCommand menuCommand;
     private final CartCommand cartCommand;
     private final CongraCommand congraCommand;
+    private final CartController cartController; // added a controller to access carts
     private final CongraCommand globalCongraCommand;
 
     @Inject
     public StartCommand(
-            MenuCommand menuCommand, CartCommand cartCommand, CongraCommand congraCommand) {
+            MenuCommand menuCommand,
+            CartCommand cartCommand,
+            CongraCommand congraCommand,
+            CartController cartController) {
         this.menuCommand = menuCommand;
         this.cartCommand = cartCommand;
         this.congraCommand = congraCommand;
-        this.globalCongraCommand = new CongraCommand(cartCommand.getCart());
+        this.cartController = cartController;
+        this.globalCongraCommand = new CongraCommand(cartController);
     }
 
     @Override
@@ -74,6 +80,7 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
         final String response = event.getButton().getId().split(":")[1];
         Objects.requireNonNull(response);
+        String discordUserId = event.getUser().getId();
 
         event.deferReply().queue(); // Acknowledge the interaction first
 
@@ -86,8 +93,8 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
                 break;
             case "cancel":
                 // Reset the bot's state to the initial state
-                resetBotState();
-
+                // resetBotState();
+                cartController.clearCart(discordUserId);
                 // Send a message to the user to confirm that the operation was cancelled
                 event.getHook()
                         .sendMessage(" Thank you for visiting FoodiePanda, please come again.")
@@ -104,8 +111,8 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
     }
 
     /** Resets the bot's state to the initial state. */
-    private void resetBotState() {
-        // Reset any relevant state variables here
-        cartCommand.getCart().clear();
-    }
+    // private void resetBotState() {
+    //     // Reset any relevant state variables here
+    //     cartCommand.getCart().clear();
+    // }
 }

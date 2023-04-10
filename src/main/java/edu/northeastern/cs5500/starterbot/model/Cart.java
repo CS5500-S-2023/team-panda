@@ -5,12 +5,17 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Data;
+import org.bson.types.ObjectId;
 
+@Data // a part of Lombok library to generate standard getters and setters.
 @Singleton
-public class Cart {
+public class Cart implements Model {
     private Map<Dish, Integer> items;
     private static AtomicInteger counter = new AtomicInteger(-1);
     private int orderNumber;
+    ObjectId id;
+    String discordUserId;
 
     @Inject
     public Cart() {

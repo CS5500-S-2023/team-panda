@@ -1,6 +1,6 @@
 package edu.northeastern.cs5500.starterbot.command;
 
-import edu.northeastern.cs5500.starterbot.model.Cart;
+import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -21,13 +21,14 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 @Slf4j
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
 
-    private final Cart cart;
+    // Substituted a cart with a cartController
+    private final CartController cartController;
     private final Provider<CartCommand> cartCommandProvider;
     // private final CheckoutCommand checkoutCommand;
 
     @Inject
-    public MenuCommand(Cart cart, Provider<CartCommand> cartCommandProvider) {
-        this.cart = cart;
+    public MenuCommand(CartController cartController, Provider<CartCommand> cartCommandProvider) {
+        this.cartController = cartController;
         this.cartCommandProvider = cartCommandProvider;
         // this.checkoutCommand = checkoutCommand;
     }
@@ -94,6 +95,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         Objects.requireNonNull(response);
         String reply = "You added " + response + " to your cart.";
         double dishPrice = 0.0;
+        String discordUserId = event.getUser().getId();
         if (!response.equals("")) {
             switch (response) {
                 case "chow-mein":
@@ -118,11 +120,12 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
 
         if (dishPrice != 0.0) {
             Dish dish = new Dish(response, dishPrice);
-            cart.addDish(dish);
+            // cart.addDish(dish);
+            cartController.addToCart(dish, discordUserId);
             event.reply(reply).queue();
         }
 
-        cartCommandProvider.get().displayCart(event.getHook());
+        cartCommandProvider.get().displayCart(event.getHook(), discordUserId);
     }
 
     // deleted button interaction

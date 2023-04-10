@@ -1,6 +1,6 @@
 package edu.northeastern.cs5500.starterbot.command;
 
-import edu.northeastern.cs5500.starterbot.model.Cart;
+import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -24,18 +24,19 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 @Slf4j
 public class DeleteCommand implements StringSelectHandler {
 
-    private final Cart cart;
+    // Substituted a cart with a cartController
+    private final CartController cartController;
     private final Provider<CartCommand> cartCommandProvider;
 
     /**
      * The delete command takes the values form the cart.
      *
-     * @param cart
+     * @param cartController
      * @param cartCommandProvider
      */
     @Inject
-    public DeleteCommand(Cart cart, Provider<CartCommand> cartCommandProvider) {
-        this.cart = cart;
+    public DeleteCommand(CartController cartController, Provider<CartCommand> cartCommandProvider) {
+        this.cartController = cartController;
         this.cartCommandProvider = cartCommandProvider;
     }
 
@@ -51,10 +52,10 @@ public class DeleteCommand implements StringSelectHandler {
      *
      * @param hook
      */
-    private void displayDeletePage(@Nonnull InteractionHook hook) {
+    private void displayDeletePage(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /delete");
 
-        if (cart.getCart().isEmpty()) {
+        if (cartController.getItemsInCart(discordUserId).isEmpty()) {
             hook.sendMessage("Your cart is empty.").setEphemeral(true).queue();
             return;
         }
@@ -63,7 +64,8 @@ public class DeleteCommand implements StringSelectHandler {
                 StringSelectMenu.create(getName())
                         .setPlaceholder("Click to remove a dish from your cart.");
 
-        for (Map.Entry<Dish, Integer> entry : cart.getCart().entrySet()) {
+        for (Map.Entry<Dish, Integer> entry :
+                cartController.getItemsInCart(discordUserId).entrySet()) {
             Dish dish = entry.getKey();
             int count = entry.getValue();
             String dishWithCount = String.format("%s (x%d)", dish.getDishName(), count);
@@ -81,7 +83,8 @@ public class DeleteCommand implements StringSelectHandler {
      * @param event
      */
     public void sendDeletePage(@Nonnull ButtonInteractionEvent event) {
-        displayDeletePage(event.getHook());
+        String discordUserId = event.getUser().getId();
+        displayDeletePage(event.getHook(), discordUserId);
     }
 
     /**
@@ -93,8 +96,9 @@ public class DeleteCommand implements StringSelectHandler {
     public void onStringSelectInteraction(@Nonnull StringSelectInteractionEvent event) {
         String selectedDishName = event.getInteraction().getValues().get(0);
         Dish dishToRemove = null;
+        String discordUserId = event.getUser().getId();
 
-        for (Dish dish : cart.getCart().keySet()) {
+        for (Dish dish : cartController.getItemsInCart(discordUserId).keySet()) {
             if (dish.getDishName().equals(selectedDishName)) {
                 dishToRemove = dish;
                 break;
@@ -102,9 +106,10 @@ public class DeleteCommand implements StringSelectHandler {
         }
 
         if (dishToRemove != null) {
-            cart.deleteDish(dishToRemove);
+            // cart.deleteDish(dishToRemove);
+            cartController.removeFromCart(dishToRemove, discordUserId);
             event.reply("You removed " + selectedDishName + " from your cart.").queue();
-            cartCommandProvider.get().displayCart(event.getHook());
+            cartCommandProvider.get().displayCart(event.getHook(), discordUserId);
         } else {
             event.reply("Invalid dish name.").queue();
         }

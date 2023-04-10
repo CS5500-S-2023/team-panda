@@ -1,6 +1,6 @@
 package edu.northeastern.cs5500.starterbot.command;
 
-import edu.northeastern.cs5500.starterbot.model.Cart;
+import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -20,7 +20,8 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 @Singleton
 @Slf4j
 public class CartCommand implements SlashCommandHandler, ButtonHandler {
-    private final Cart cart;
+    // Substituted a cart with a cartController
+    private final CartController cartController;
     private final MenuCommand menuCommand;
     private final Provider<MenuCommand> menuCommandProvider;
     private final Provider<CheckoutCommand> checkoutCommandProvider;
@@ -28,12 +29,14 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
 
     @Inject
     public CartCommand(
-            Cart cart,
+            // Cart cart,
+            CartController cartController,
             MenuCommand menuCommand,
             Provider<MenuCommand> menuCommandProvider,
             Provider<CheckoutCommand> checkoutCommandProvider,
             Provider<DeleteCommand> deleteCommandProvider) {
-        this.cart = cart;
+        // this.cart = cart;
+        this.cartController = cartController;
         this.menuCommand = menuCommand;
         this.menuCommandProvider = menuCommandProvider;
         this.checkoutCommandProvider = checkoutCommandProvider;
@@ -59,7 +62,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
      *
      * @param hook
      */
-    public void displayCart(@Nonnull InteractionHook hook) {
+    public void displayCart(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /cart");
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -67,8 +70,10 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         embedBuilder.setColor(0x1fab89);
 
         double totalPrice = 0;
-        if (!cart.getCart().isEmpty()) {
-            for (Map.Entry<Dish, Integer> entry : cart.getCart().entrySet()) {
+        if (!cartController.getItemsInCart(discordUserId).isEmpty()) {
+            for (Map.Entry<Dish, Integer> entry :
+                    // use cartController instead of Cart to get specific cart for the user.
+                    cartController.getItemsInCart(discordUserId).entrySet()) {
                 Dish dish = entry.getKey();
                 int quantity = entry.getValue();
                 String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
@@ -81,7 +86,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         embedBuilder.setFooter(String.format("Total Price: $%.2f", totalPrice));
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        if (!cart.getCart().isEmpty()) {
+        if (!cartController.getItemsInCart(discordUserId).isEmpty()) {
             messageCreateBuilder =
                     messageCreateBuilder.addActionRow(
                             Button.primary(this.getName() + ":add-more", "Add More"),
@@ -91,7 +96,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         } else {
             messageCreateBuilder =
                     messageCreateBuilder.addActionRow(
-                            Button.primary(this.getName() + ":add-more", "Menu"),
+                            Button.primary(this.getName() + ":add-more", "Add more"),
                             Button.danger(this.getName() + ":cancel", "Cancel"));
         }
 
@@ -101,7 +106,8 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        displayCart(event.getHook());
+        String discordUserId = event.getUser().getId();
+        displayCart(event.getHook(), discordUserId);
     }
 
     @Override
@@ -132,15 +138,17 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
      * @param event
      */
     public void sendCart(@Nonnull ButtonInteractionEvent event) {
-        displayCart(event.getHook());
+        String discordUserId = event.getUser().getId();
+        displayCart(event.getHook(), discordUserId);
     }
 
-    public Cart getCart() {
-        return cart;
-    }
+    // public Cart getCart() {
+    //     return cartController.getCart();
+    // }
 
     public void clearCart(ButtonInteractionEvent event) {
-        cart.clear();
+        String discordUserId = event.getUser().getId();
+        cartController.clearCart(discordUserId);
         event.getHook()
                 .sendMessage("Your cart has been cleared. Thanks for visiting FoodiePanda.")
                 .queue();
