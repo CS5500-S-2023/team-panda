@@ -108,6 +108,12 @@ public class CommandModule {
     }
 
     @Provides
+    @IntoSet
+    public ButtonHandler provideCongraCommandClickHandler(CongraCommand congraCommand) {
+        return congraCommand;
+    }
+
+    @Provides
     @Singleton
     public Integer provideInteger(Cart cart) {
         return cart.getOrderNumber();

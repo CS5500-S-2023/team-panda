@@ -13,10 +13,11 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 @Singleton
 @Slf4j
-public class CongraCommand implements SlashCommandHandler {
+public class CongraCommand implements SlashCommandHandler, ButtonHandler {
     // Substituted a cart with a cartController
     private final CartController cartController;
     private Integer orderNumber;
@@ -39,6 +40,13 @@ public class CongraCommand implements SlashCommandHandler {
         return Commands.slash(getName(), "Checkout successfully!");
     }
 
+    /**
+     * Displays the message of order completed after the user make payment, along with two buttons
+     * for user to choose as either to pick or deliver the order.
+     *
+     * @param hook
+     * @param discordUserId
+     */
     private void display(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /congra");
 
@@ -53,7 +61,12 @@ public class CongraCommand implements SlashCommandHandler {
                 "Order number: " + String.valueOf(orderNumber),
                 true);
 
-        hook.sendMessageEmbeds(embedBuilder.build()).setEphemeral(true).queue();
+        hook.sendMessageEmbeds(embedBuilder.build())
+                .addActionRow(
+                        Button.primary(getName() + ":pickup", "Pick up"),
+                        Button.primary(getName() + ":deliver", "Deliver"))
+                .setEphemeral(true)
+                .queue();
     }
 
     @Override
@@ -78,5 +91,29 @@ public class CongraCommand implements SlashCommandHandler {
         Cart cart = cartController.getCartForUser(discordUserId);
         cart.setOrderNumber(number);
         display(event.getHook(), discordUserId);
+    }
+
+    /**
+     * The use by clicking on the button "pick up", it displays the message "Your order is ready to
+     * pick up.", and by clicking on the button "deliver", it will display "Your order is
+     * delivered."
+     *
+     * @param event
+     */
+    @Override
+    public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
+        String id = event.getButton().getId();
+        String action = id.split(":", 2)[1];
+
+        switch (action) {
+            case "pickup":
+                event.reply("Your order is ready to pick up.").setEphemeral(true).queue();
+                break;
+            case "deliver":
+                event.reply("Your order is delivered.").setEphemeral(true).queue();
+                break;
+            default:
+                event.getHook().sendMessage("Invalid option selected.").queue();
+        }
     }
 }
