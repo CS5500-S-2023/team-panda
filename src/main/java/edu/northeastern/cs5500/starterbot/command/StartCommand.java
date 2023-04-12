@@ -4,6 +4,7 @@ import edu.northeastern.cs5500.starterbot.controller.CartController;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -23,18 +24,21 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
     private final CongraCommand congraCommand;
     private final CartController cartController; // added a controller to access carts
     private final CongraCommand globalCongraCommand;
+    private final Provider<MenuCommand> menuCommandProvider;
 
     @Inject
     public StartCommand(
             MenuCommand menuCommand,
             CartCommand cartCommand,
             CongraCommand congraCommand,
-            CartController cartController) {
+            CartController cartController,
+            Provider<MenuCommand> menuCommandProvider) {
         this.menuCommand = menuCommand;
         this.cartCommand = cartCommand;
         this.congraCommand = congraCommand;
         this.cartController = cartController;
-        this.globalCongraCommand = new CongraCommand(cartController);
+        this.menuCommandProvider = menuCommandProvider;
+        this.globalCongraCommand = new CongraCommand(cartController, menuCommandProvider);
     }
 
     @Override

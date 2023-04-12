@@ -2,8 +2,10 @@ package edu.northeastern.cs5500.starterbot.command;
 
 import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Cart;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -21,10 +23,12 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
     // Substituted a cart with a cartController
     private final CartController cartController;
     private Integer orderNumber;
+    private final Provider<MenuCommand> menuCommandProvider;
 
     @Inject
-    public CongraCommand(CartController cartController) {
+    public CongraCommand(CartController cartController, Provider<MenuCommand> menuCommandProvider) {
         this.cartController = cartController;
+        this.menuCommandProvider = menuCommandProvider;
         // this.orderNumber = cart.getOrderNumber();
     }
 
@@ -104,13 +108,20 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
         String id = event.getButton().getId();
         String action = id.split(":", 2)[1];
+        Objects.requireNonNull(action);
+        PickUpCommand pickUpCommand = new PickUpCommand(menuCommandProvider.get());
+        DeliveryCommand deliveryCommand = new DeliveryCommand(menuCommandProvider.get());
+
+        event.deferReply().queue();
 
         switch (action) {
             case "pickup":
-                event.reply("Your order is ready to pick up.").setEphemeral(true).queue();
+                // event.reply("Your order is ready to pick up.").setEphemeral(true).queue();
+                pickUpCommand.sendPickup(event);
                 break;
             case "deliver":
-                event.reply("Your order is delivered.").setEphemeral(true).queue();
+                // event.reply("Your order is delivered.").setEphemeral(true).queue();
+                deliveryCommand.sendDeliver(event);
                 break;
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();
