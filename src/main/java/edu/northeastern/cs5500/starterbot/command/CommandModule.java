@@ -97,6 +97,30 @@ public class CommandModule {
 
     @Provides
     @IntoSet
+    public SlashCommandHandler providePickUpCommand(PickUpCommand pickupCommand) {
+        return pickupCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler providePickUpCommandClickHandler(PickUpCommand pickupCommand) {
+        return pickupCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideDeliveryCommand(DeliveryCommand deliveryCommand) {
+        return deliveryCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler provideDeliveryCommandClickHandler(DeliveryCommand deliveryCommand) {
+        return deliveryCommand;
+    }
+
+    @Provides
+    @IntoSet
     public StringSelectHandler provideDeleteCommandClickHandler(DeleteCommand deleteCommand) {
         return deleteCommand;
     }

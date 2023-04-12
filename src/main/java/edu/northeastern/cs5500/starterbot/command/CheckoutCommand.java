@@ -5,6 +5,7 @@ import edu.northeastern.cs5500.starterbot.model.Cart;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -24,14 +25,19 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
     private final CongraCommand congraCommand;
     private final CongraCommand globalCongraCommand;
     private final CartController cartController;
+    private final Provider<MenuCommand> menuCommandProvider;
 
     @Inject
     public CheckoutCommand(
-            CartCommand cartCommand, CartController cartController, CongraCommand congraCommand) {
+            CartCommand cartCommand,
+            CartController cartController,
+            CongraCommand congraCommand,
+            Provider<MenuCommand> menuCommandProvider) {
         this.cartCommand = cartCommand;
         this.congraCommand = congraCommand;
         this.cartController = cartController;
-        this.globalCongraCommand = new CongraCommand(cartController);
+        this.menuCommandProvider = menuCommandProvider;
+        this.globalCongraCommand = new CongraCommand(cartController, menuCommandProvider);
     }
 
     @Override
