@@ -13,6 +13,7 @@ class DishTest {
     private static final double PRICE = 1.5;
 
     @Test
+    // Test for the constructor.
     void testDishConstrucotr() {
         Dish dish = new Dish(DISH_NAME, PRICE);
         assertThat(dish.getDishName()).isEqualTo(DISH_NAME);
