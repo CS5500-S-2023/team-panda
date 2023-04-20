@@ -52,10 +52,15 @@ class CartTest {
     // Test deleting a dish from the cart
     @Test
     void testDeleteDish() {
+        // delete from empty carft
+        cart.deleteDish(dish1);
+        assertThat(cart.getItems()).isEmpty();
+        // add to cart
         cart.addDish(dish1);
         cart.addDish(dish2);
         assertThat(cart.getItems()).containsEntry(dish1, 1);
         assertThat(cart.getItems()).containsEntry(dish2, 1);
+        // delte from cart
         cart.deleteDish(dish1);
         assertThat(cart.getItems()).isNotEmpty();
         assertThat(cart.getItems()).doesNotContainEntry(dish1, 1);
