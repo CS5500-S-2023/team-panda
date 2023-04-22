@@ -4,7 +4,6 @@ import edu.northeastern.cs5500.starterbot.controller.CartController;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -19,26 +18,13 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 @Slf4j
 public class StartCommand implements SlashCommandHandler, ButtonHandler {
 
-    private final MenuCommand menuCommand;
-    private final CartCommand cartCommand;
-    private final CongraCommand congraCommand;
-    private final CartController cartController; // added a controller to access carts
-    private final CongraCommand globalCongraCommand;
-    private final Provider<MenuCommand> menuCommandProvider;
+    @Inject MenuCommand menuCommand;
+    @Inject CartCommand cartCommand;
+    @Inject CartController cartController;
 
     @Inject
-    public StartCommand(
-            MenuCommand menuCommand,
-            CartCommand cartCommand,
-            CongraCommand congraCommand,
-            CartController cartController,
-            Provider<MenuCommand> menuCommandProvider) {
-        this.menuCommand = menuCommand;
-        this.cartCommand = cartCommand;
-        this.congraCommand = congraCommand;
-        this.cartController = cartController;
-        this.menuCommandProvider = menuCommandProvider;
-        this.globalCongraCommand = new CongraCommand(cartController, menuCommandProvider);
+    public StartCommand() {
+        // left blank for Dagger injection
     }
 
     @Override
@@ -50,8 +36,7 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
     @Override
     @Nonnull
     public CommandData getCommandData() {
-        return Commands.slash(
-                getName(), "Provide a start page to users"); // Changed command description
+        return Commands.slash(getName(), "Provide a start page to users");
     }
 
     /**
@@ -82,7 +67,8 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        final String response = event.getButton().getId().split(":")[1];
+        var id = Objects.requireNonNull(event.getButton().getId());
+        final String response = id.split(":")[1];
         Objects.requireNonNull(response);
         String discordUserId = event.getUser().getId();
 
@@ -96,27 +82,14 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
                 cartCommand.sendCart(event);
                 break;
             case "cancel":
-                // Reset the bot's state to the initial state
-                // resetBotState();
                 cartController.clearCart(discordUserId);
                 // Send a message to the user to confirm that the operation was cancelled
                 event.getHook()
                         .sendMessage(" Thank you for visiting FoodiePanda, please come again.")
                         .queue();
                 break;
-                // case "checkout":
-                // int orderNumber = cartCommand.getCart().getNextOrderNumber();
-                // globalCongraCommand.sendCongra(event, orderNumber);
-                // break;
-                // I'm not sure if we will use checkout, just keep it here
             default:
                 event.getHook().sendMessage("Invalid option selected.").queue();
         }
     }
-
-    /** Resets the bot's state to the initial state. */
-    // private void resetBotState() {
-    //     // Reset any relevant state variables here
-    //     cartCommand.getCart().clear();
-    // }
 }

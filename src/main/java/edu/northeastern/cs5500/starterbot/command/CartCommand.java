@@ -3,9 +3,9 @@ package edu.northeastern.cs5500.starterbot.command;
 import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -21,26 +21,14 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 @Slf4j
 public class CartCommand implements SlashCommandHandler, ButtonHandler {
     // Substituted a cart with a cartController
-    private final CartController cartController;
-    private final MenuCommand menuCommand;
-    private final Provider<MenuCommand> menuCommandProvider;
-    private final Provider<CheckoutCommand> checkoutCommandProvider;
-    private final Provider<DeleteCommand> deleteCommandProvider;
+    @Inject CartController cartController;
+    @Inject MenuCommand menuCommand;
+    @Inject CheckoutCommand checkoutCommand;
+    @Inject DeleteCommand deleteCommand;
 
     @Inject
-    public CartCommand(
-            // Cart cart,
-            CartController cartController,
-            MenuCommand menuCommand,
-            Provider<MenuCommand> menuCommandProvider,
-            Provider<CheckoutCommand> checkoutCommandProvider,
-            Provider<DeleteCommand> deleteCommandProvider) {
-        // this.cart = cart;
-        this.cartController = cartController;
-        this.menuCommand = menuCommand;
-        this.menuCommandProvider = menuCommandProvider;
-        this.checkoutCommandProvider = checkoutCommandProvider;
-        this.deleteCommandProvider = deleteCommandProvider;
+    public CartCommand() {
+        // left blank for Dagger injection
     }
 
     @Override
@@ -77,7 +65,12 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
                 Dish dish = entry.getKey();
                 int quantity = entry.getValue();
                 String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
-                embedBuilder.addField(itemName, String.format("$%.2f", dish.getPrice()), false);
+                String itemPrice = String.format("$%.2f", dish.getPrice());
+                if (itemName == null || itemPrice == null) {
+                    // can never happen because the first arguments to String.format are not null
+                    throw new NullPointerException();
+                }
+                embedBuilder.addField(itemName, itemPrice, false);
                 totalPrice += dish.getPrice() * quantity;
             }
         } else {
@@ -112,17 +105,18 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        final String response = event.getButton().getId().split(":")[1];
+        final String id = Objects.requireNonNull(event.getButton().getId());
+        final String response = id.split(":")[1];
         event.deferReply().queue();
         switch (response) {
             case "add-more":
                 menuCommand.sendMenu(event);
                 break;
             case "delete":
-                deleteCommandProvider.get().sendDeletePage(event);
+                deleteCommand.sendDeletePage(event);
                 break;
             case "checkout":
-                checkoutCommandProvider.get().sendCheckout(event);
+                checkoutCommand.sendCheckout(event);
                 break;
             case "cancel":
                 clearCart(event);
@@ -141,10 +135,6 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         String discordUserId = event.getUser().getId();
         displayCart(event.getHook(), discordUserId);
     }
-
-    // public Cart getCart() {
-    //     return cartController.getCart();
-    // }
 
     public void clearCart(ButtonInteractionEvent event) {
         String discordUserId = event.getUser().getId();

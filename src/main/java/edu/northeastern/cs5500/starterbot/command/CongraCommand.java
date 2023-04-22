@@ -5,7 +5,6 @@ import edu.northeastern.cs5500.starterbot.model.Cart;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -20,16 +19,13 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 @Singleton
 @Slf4j
 public class CongraCommand implements SlashCommandHandler, ButtonHandler {
-    // Substituted a cart with a cartController
-    private final CartController cartController;
-    private Integer orderNumber;
-    private final Provider<MenuCommand> menuCommandProvider;
+    @Inject CartController cartController;
+    @Inject PickUpCommand pickUpCommand;
+    @Inject DeliveryCommand deliveryCommand;
 
     @Inject
-    public CongraCommand(CartController cartController, Provider<MenuCommand> menuCommandProvider) {
-        this.cartController = cartController;
-        this.menuCommandProvider = menuCommandProvider;
-        // this.orderNumber = cart.getOrderNumber();
+    public CongraCommand() {
+        // left blank for Dagger injection
     }
 
     @Override
@@ -54,16 +50,13 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
     private void display(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /congra");
 
-        // cart.clear();
         Integer orderNumber = cartController.getCartForUser(discordUserId).getOrderNumber();
         cartController.clearCart(discordUserId);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Congratulation!");
         embedBuilder.setColor(0x1fab89);
         embedBuilder.addField(
-                "Your order has been placed.",
-                "Order number: " + String.valueOf(orderNumber),
-                true);
+                "Your order has been placed.", "Order number: " + orderNumber.toString(), true);
 
         hook.sendMessageEmbeds(embedBuilder.build())
                 .addActionRow(
@@ -80,7 +73,6 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
     }
 
     public void sendCongra(@Nonnull StringSelectInteractionEvent event, int number) {
-        orderNumber = number;
         String discordUserId = event.getUser().getId();
         Cart cart =
                 cartController.getCartForUser(
@@ -90,7 +82,6 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
     }
 
     public void sendCongra(@Nonnull ButtonInteractionEvent event, int number) {
-        orderNumber = number;
         String discordUserId = event.getUser().getId();
         Cart cart = cartController.getCartForUser(discordUserId);
         cart.setOrderNumber(number);
@@ -106,21 +97,17 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
      */
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        String id = event.getButton().getId();
+        String id = Objects.requireNonNull(event.getButton().getId());
         String action = id.split(":", 2)[1];
         Objects.requireNonNull(action);
-        PickUpCommand pickUpCommand = new PickUpCommand(menuCommandProvider.get());
-        DeliveryCommand deliveryCommand = new DeliveryCommand(menuCommandProvider.get());
 
         event.deferReply().queue();
 
         switch (action) {
             case "pickup":
-                // event.reply("Your order is ready to pick up.").setEphemeral(true).queue();
                 pickUpCommand.sendPickup(event);
                 break;
             case "deliver":
-                // event.reply("Your order is delivered.").setEphemeral(true).queue();
                 deliveryCommand.sendDeliver(event);
                 break;
             default:
