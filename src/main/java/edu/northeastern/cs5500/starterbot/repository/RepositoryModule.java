@@ -20,17 +20,6 @@ public class RepositoryModule {
         return repository;
     }
 
-    // @Provides
-    // public GenericRepository<UserPreference> provideUserPreferencesRepository(
-    //         MongoDBRepository<UserPreference> repository) {
-    //     return repository;
-    // }
-
-    // @Provides
-    // public Class<UserPreference> provideUserPreference() {
-    //     return UserPreference.class;
-    // }
-
     @Provides
     public GenericRepository<Cart> provideCartRepository(InMemoryRepository<Cart> repository) {
         return repository;

@@ -5,7 +5,6 @@ import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -16,21 +15,17 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 @Singleton
 @Slf4j
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
-
-    // Substituted a cart with a cartController
-    private final CartController cartController;
-    private final Provider<CartCommand> cartCommandProvider;
-    // private final CheckoutCommand checkoutCommand;
+    @Inject CartController cartController;
+    @Inject CartCommand cartCommand;
 
     @Inject
-    public MenuCommand(CartController cartController, Provider<CartCommand> cartCommandProvider) {
-        this.cartController = cartController;
-        this.cartCommandProvider = cartCommandProvider;
-        // this.checkoutCommand = checkoutCommand;
+    public MenuCommand() {
+        // left blank for Dagger injection
     }
 
     @Override
@@ -48,6 +43,8 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
     private void displayMenu(@Nonnull InteractionHook hook) {
         log.info("event: /menu");
 
+        // TODO: Prices are stored here and also stored in onStringSelectInteraction which will
+        //       inevitably lead to inconsistencies. Do not do this.
         StringSelectMenu menu =
                 StringSelectMenu.create("menu")
                         .setPlaceholder(
@@ -63,12 +60,9 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
                         .addOption("Broccoli Beef", "broccoli-beef", "$4")
                         .build();
 
-        MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        messageCreateBuilder =
-                messageCreateBuilder.addActionRow(menu); // add menu to messageCreateBuilder
-        // deleted three buttons
+        MessageCreateData messageCreateData = new MessageCreateBuilder().addActionRow(menu).build();
 
-        hook.sendMessage(messageCreateBuilder.build()).queue();
+        hook.sendMessage(messageCreateData).queue();
     }
 
     @Override
@@ -96,6 +90,8 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         String reply = "You added " + response + " to your cart.";
         double dishPrice = 0.0;
         String discordUserId = event.getUser().getId();
+        // TODO: why are you checking for an empty response? What do you expect to happen?
+        // TODO: Why are your prices hard-coded in the menu command? Where's your menu controller?
         if (!response.equals("")) {
             switch (response) {
                 case "chow-mein":
@@ -119,14 +115,11 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         }
 
         if (dishPrice != 0.0) {
-            Dish dish = new Dish(response, dishPrice);
-            // cart.addDish(dish);
+            Dish dish = Dish.builder().dishName(response).price(dishPrice).build();
             cartController.addToCart(dish, discordUserId);
             event.reply(reply).queue();
         }
 
-        cartCommandProvider.get().displayCart(event.getHook(), discordUserId);
+        cartCommand.displayCart(event.getHook(), discordUserId);
     }
-
-    // deleted button interaction
 }

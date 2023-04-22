@@ -5,7 +5,6 @@ import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -25,19 +24,12 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 public class DeleteCommand implements StringSelectHandler {
 
     // Substituted a cart with a cartController
-    private final CartController cartController;
-    private final Provider<CartCommand> cartCommandProvider;
+    @Inject CartController cartController;
+    @Inject CartCommand cartCommand;
 
-    /**
-     * The delete command takes the values form the cart.
-     *
-     * @param cartController
-     * @param cartCommandProvider
-     */
     @Inject
-    public DeleteCommand(CartController cartController, Provider<CartCommand> cartCommandProvider) {
-        this.cartController = cartController;
-        this.cartCommandProvider = cartCommandProvider;
+    public DeleteCommand() {
+        // left blank for Dagger injection
     }
 
     /** The delete handler is accessed by the button named "delete". */
@@ -69,6 +61,9 @@ public class DeleteCommand implements StringSelectHandler {
             Dish dish = entry.getKey();
             int count = entry.getValue();
             String dishWithCount = String.format("%s (x%d)", dish.getDishName(), count);
+            if (dishWithCount == null) {
+                throw new NullPointerException();
+            }
             menuBuilder.addOption(dishWithCount, dish.getDishName());
         }
 
@@ -98,6 +93,9 @@ public class DeleteCommand implements StringSelectHandler {
         Dish dishToRemove = null;
         String discordUserId = event.getUser().getId();
 
+        // TODO: Why is this not cartController.getNamedItemFromCart(discordUserId, dishName)?
+        // TODO: Why is there no `boolean cartController.deleteNamedItemFromCart(discordUserId,
+        // dishName)`?
         for (Dish dish : cartController.getItemsInCart(discordUserId).keySet()) {
             if (dish.getDishName().equals(selectedDishName)) {
                 dishToRemove = dish;
@@ -105,13 +103,13 @@ public class DeleteCommand implements StringSelectHandler {
             }
         }
 
-        if (dishToRemove != null) {
-            // cart.deleteDish(dishToRemove);
-            cartController.removeFromCart(dishToRemove, discordUserId);
-            event.reply("You removed " + selectedDishName + " from your cart.").queue();
-            cartCommandProvider.get().displayCart(event.getHook(), discordUserId);
-        } else {
+        if (dishToRemove == null) {
             event.reply("Invalid dish name.").queue();
+            return;
         }
+
+        cartController.removeFromCart(dishToRemove, discordUserId);
+        event.reply("You removed " + selectedDishName + " from your cart.").queue();
+        cartCommand.displayCart(event.getHook(), discordUserId);
     }
 }

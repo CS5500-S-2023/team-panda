@@ -20,11 +20,14 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 @Slf4j
 public class QueueCommand implements SlashCommandHandler {
 
+    // TODO: This is not acceptable; use controllers and repositories.
     private final List<Order> ordersInProgress = new ArrayList<>();
     private final List<Order> readyOrders = new ArrayList<>();
 
     @Inject
-    public QueueCommand() {}
+    public QueueCommand() {
+        // left blank for Dagger injection
+    }
 
     @Override
     @Nonnull
@@ -63,13 +66,19 @@ public class QueueCommand implements SlashCommandHandler {
         hook.sendMessageEmbeds(embedBuilder.build()).setEphemeral(true).queue();
     }
 
+    // TODO: This is a mediocre way to format orders. Why are you not using fields?
+    @Nonnull
     private String getOrdersAsString(List<Order> orders) {
         StringBuilder sb = new StringBuilder();
         for (Order order : orders) {
             sb.append("Order #").append(order.getOrderNumber()).append(" - ");
             sb.append(order.getStatus()).append("\n");
         }
-        return sb.toString();
+        var result = sb.toString();
+        if (result == null) {
+            throw new IllegalStateException("Generated an empty order list");
+        }
+        return result;
     }
 
     @Override

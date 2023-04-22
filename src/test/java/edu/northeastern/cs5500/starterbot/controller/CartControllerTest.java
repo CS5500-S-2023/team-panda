@@ -14,11 +14,16 @@ class CartControllerTest {
         return new CartController(new InMemoryRepository<>());
     }
 
+    Dish createTestDish() {
+        return Dish.builder().dishName("rice").price(0.99).build();
+    }
+
     @Test
     void testGetItemsInCart() {
         CartController cartController = getCartController();
         // test empty cart
-        Dish dish = new Dish("rice", 0.99);
+
+        Dish dish = createTestDish();
         assertThat(cartController.getItemsInCart(USER_ID_1)).doesNotContainKey(dish);
 
         // test non-empty cart
@@ -31,7 +36,7 @@ class CartControllerTest {
     void testAddToCart() {
         // emtpy cart
         CartController cartController = getCartController();
-        Dish dish = new Dish("rice", 0.99);
+        Dish dish = createTestDish();
         assertThat(cartController.getItemsInCart(USER_ID_1)).isEmpty();
         // add to cart
         cartController.addToCart(dish, USER_ID_1);
@@ -43,7 +48,7 @@ class CartControllerTest {
     void testRemoveFromCart() {
         // add to cart
         CartController cartController = getCartController();
-        Dish dish = new Dish("rice", 0.99);
+        Dish dish = createTestDish();
         cartController.addToCart(dish, USER_ID_1);
         assertThat(cartController.getItemsInCart(USER_ID_1)).containsKey(dish);
         // remove from cart
@@ -61,7 +66,7 @@ class CartControllerTest {
         assertThat(cart.getDiscordUserId()).isEqualTo(USER_ID_1);
 
         // test get non-empty cart for user
-        Dish dish = new Dish("rice", 0.99);
+        Dish dish = createTestDish();
         cartController.addToCart(dish, USER_ID_1);
         assertThat(cart.getItems()).isNotEmpty();
     }
@@ -70,7 +75,7 @@ class CartControllerTest {
     void testClearCart() {
         // add to cart
         CartController cartController = getCartController();
-        Dish dish = new Dish("rice", 0.99);
+        Dish dish = createTestDish();
         cartController.addToCart(dish, USER_ID_1);
         assertThat(cartController.getItemsInCart(USER_ID_1)).containsKey(dish);
         // clear cart
