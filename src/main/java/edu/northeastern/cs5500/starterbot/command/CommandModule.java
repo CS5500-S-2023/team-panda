@@ -10,19 +10,6 @@ import javax.inject.Singleton;
 @Module
 public class CommandModule {
 
-    @Provides // This is a provider that provides into a set of commands
-    @IntoSet
-    public SlashCommandHandler provideSayCommand(ButtonCommand sayCommand) {
-        return sayCommand;
-    }
-
-    @Provides
-    @IntoSet
-    public SlashCommandHandler providePreferredNameCommand(
-            PreferredNameCommand preferredNameCommand) {
-        return preferredNameCommand;
-    }
-
     @Provides
     @IntoSet
     public SlashCommandHandler provideButtonCommand(ButtonCommand buttonCommand) {
@@ -33,18 +20,6 @@ public class CommandModule {
     @IntoSet
     public ButtonHandler provideButtonCommandClickHandler(ButtonCommand buttonCommand) {
         return buttonCommand;
-    }
-
-    @Provides
-    @IntoSet
-    public SlashCommandHandler provideDropdownCommand(DropdownCommand dropdownCommand) {
-        return dropdownCommand;
-    }
-
-    @Provides
-    @IntoSet
-    public StringSelectHandler provideDropdownCommandMenuHandler(DropdownCommand dropdownCommand) {
-        return dropdownCommand;
     }
 
     @Provides
@@ -141,11 +116,5 @@ public class CommandModule {
     @Singleton
     public Integer provideInteger(Cart cart) {
         return cart.getOrderNumber();
-    }
-
-    @Provides
-    @IntoSet
-    public SlashCommandHandler provideQueueCommand(QueueCommand queueCommand) {
-        return queueCommand;
     }
 }
