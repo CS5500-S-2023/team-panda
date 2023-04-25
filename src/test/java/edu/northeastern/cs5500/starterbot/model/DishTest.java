@@ -15,7 +15,8 @@ class DishTest {
     @Test
     // Test for the constructor.
     void testDishConstrucotr() {
-        Dish dish = new Dish(DISH_NAME, PRICE);
+        Dish dish = Dish.builder().dishName(DISH_NAME).price(PRICE).build();
+        // Dish dish = new Dish(DISH_NAME, PRICE);
         assertThat(dish.getDishName()).isEqualTo(DISH_NAME);
         assertThat(dish.getPrice()).isEqualTo(PRICE);
     }

@@ -119,7 +119,7 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         }
 
         if (dishPrice != 0.0) {
-            Dish dish = new Dish(response, dishPrice);
+            Dish dish = Dish.builder().dishName(response).price(dishPrice).build();
             // cart.addDish(dish);
             cartController.addToCart(dish, discordUserId);
             event.reply(reply).queue();
