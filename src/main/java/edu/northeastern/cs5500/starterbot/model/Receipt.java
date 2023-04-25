@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.model;
 
+import java.util.Map;
 import javax.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +16,5 @@ public class Receipt implements Model {
     ObjectId id;
 
     @Nonnull private ObjectId userId;
-    @Nonnull private ObjectId storeId;
+    @Nonnull private Map<Dish, Integer> dishes;
 }
