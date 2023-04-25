@@ -14,6 +14,6 @@ import org.bson.types.ObjectId;
 public class MenuItem implements Model {
     ObjectId id;
 
-    @Nonnull private String dishName;
+    @Nonnull private String itemName;
     private double price;
 }
