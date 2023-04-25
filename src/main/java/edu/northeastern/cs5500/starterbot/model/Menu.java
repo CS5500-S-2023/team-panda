@@ -1,10 +1,11 @@
 package edu.northeastern.cs5500.starterbot.model;
 
-import lombok.Data;
-
 import java.awt.MenuItem;
 import java.util.Set;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
 @Data
@@ -21,10 +22,9 @@ public class Menu implements Model {
 
     public boolean delteMenuItem(MenuItem menuItem) {
         if (menuItems.contains(menuItem)) {
-            menuItems.remove(menuItem); 
-            return True;
-        } 
-        return False;
+            menuItems.remove(menuItem);
+            return true;
+        }
+        return false;
     }
-
 }
