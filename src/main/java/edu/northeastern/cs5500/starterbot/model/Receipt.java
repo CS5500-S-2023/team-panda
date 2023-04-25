@@ -15,5 +15,5 @@ public class Receipt implements Model {
     ObjectId id;
 
     @Nonnull private ObjectId userId;
-    private ObjectId storeId;
+    @Nonnull private ObjectId storeId;
 }
