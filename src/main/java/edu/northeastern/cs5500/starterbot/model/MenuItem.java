@@ -11,9 +11,9 @@ import org.bson.types.ObjectId;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dish implements Model {
+public class MenuItem implements Model {
     ObjectId id;
 
-    @Nonnull private String dishName;
+    @Nonnull private String itemName;
     private double price;
 }
