@@ -4,8 +4,6 @@ package edu.northeastern.cs5500.starterbot.command;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
-import edu.northeastern.cs5500.starterbot.model.Cart;
-import javax.inject.Singleton;
 
 @Module
 public class CommandModule {
@@ -110,11 +108,5 @@ public class CommandModule {
     @IntoSet
     public ButtonHandler provideCongraCommandClickHandler(CongraCommand congraCommand) {
         return congraCommand;
-    }
-
-    @Provides
-    @Singleton
-    public Integer provideInteger(Cart cart) {
-        return cart.getOrderNumber();
     }
 }
