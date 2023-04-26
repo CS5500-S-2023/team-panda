@@ -7,4 +7,3 @@ team-panda created by GitHub Classroom
 ./gradlew build
 ./gradlew run
 ```
-

@@ -1,6 +1,5 @@
 package edu.northeastern.cs5500.starterbot.model;
 
-import java.awt.MenuItem;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,19 +11,7 @@ import org.bson.types.ObjectId;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Menu implements Model {
-    private Set<MenuItem> menuItems;
+public class Menu {
     ObjectId id;
-
-    public void addMenuItem(MenuItem menuItem) {
-        menuItems.add(menuItem);
-    }
-
-    public boolean delteMenuItem(MenuItem menuItem) {
-        if (menuItems.contains(menuItem)) {
-            menuItems.remove(menuItem);
-            return true;
-        }
-        return false;
-    }
+    Set<MenuItem> menuItems;
 }
