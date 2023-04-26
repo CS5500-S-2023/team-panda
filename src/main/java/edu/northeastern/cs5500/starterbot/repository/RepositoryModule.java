@@ -20,6 +20,15 @@ public class RepositoryModule {
     //     return repository;
     // }
 
+    // Equivalent with the following, but this one is using mongoDB.
+    // Professor said he prefers the above one because it is less hard-coding.
+    // @Provides
+    // public GenericRepository<UserPreference> provideUserPreferencesRepository (
+    //     MongoDBService mongoDBService
+    // ) {
+    //     return new MongoDBRepository<>(UserPreference.class, mongoDBService)
+    // }
+
     // @Provides
     // public Class<UserPreference> provideUserPreference() {
     //     return UserPreference.class;
