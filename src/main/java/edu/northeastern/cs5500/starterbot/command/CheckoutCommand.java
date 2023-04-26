@@ -5,7 +5,6 @@ import edu.northeastern.cs5500.starterbot.model.Cart;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -21,23 +20,13 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 @Slf4j
 public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
 
-    private final CartCommand cartCommand;
-    private final CongraCommand congraCommand;
-    private final CongraCommand globalCongraCommand;
-    private final CartController cartController;
-    private final Provider<MenuCommand> menuCommandProvider;
+    @Inject CartCommand cartCommand;
+    @Inject CongraCommand congraCommand;
+    @Inject CartController cartController;
 
     @Inject
-    public CheckoutCommand(
-            CartCommand cartCommand,
-            CartController cartController,
-            CongraCommand congraCommand,
-            Provider<MenuCommand> menuCommandProvider) {
-        this.cartCommand = cartCommand;
-        this.congraCommand = congraCommand;
-        this.cartController = cartController;
-        this.menuCommandProvider = menuCommandProvider;
-        this.globalCongraCommand = new CongraCommand(cartController, menuCommandProvider);
+    public CheckoutCommand() {
+        // left blank for Dagger injection
     }
 
     @Override
@@ -73,8 +62,6 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        // display(event.getHook());
-        // If you are using hook, please use the upper line and delete the following.
         log.info("event: /checkout");
 
         String discordUserId = event.getUser().getId();
@@ -96,17 +83,14 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        final String response = event.getButton().getId().split(":")[1];
+        final String response = Objects.requireNonNull(event.getButton().getId()).split(":")[1];
         Objects.requireNonNull(response);
-        String discordUserId = event.getUser().getId();
-        Cart cart = cartController.getCartForUser(discordUserId);
 
         event.deferReply().queue(); // Acknowledge the interaction first
 
         switch (response) {
             case "make-payment":
-                int orderNumber = cart.getNextOrderNumber();
-                globalCongraCommand.sendCongra(event, orderNumber);
+                congraCommand.sendCongra(event);
                 break;
             case "cart":
                 cartCommand.sendCart(event);

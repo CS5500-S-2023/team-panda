@@ -23,22 +23,17 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
     // Substituted a cart with a cartController
     private final CartController cartController;
     private final MenuCommand menuCommand;
-    private final Provider<MenuCommand> menuCommandProvider;
     private final Provider<CheckoutCommand> checkoutCommandProvider;
     private final Provider<DeleteCommand> deleteCommandProvider;
 
     @Inject
     public CartCommand(
-            // Cart cart,
             CartController cartController,
             MenuCommand menuCommand,
-            Provider<MenuCommand> menuCommandProvider,
             Provider<CheckoutCommand> checkoutCommandProvider,
             Provider<DeleteCommand> deleteCommandProvider) {
-        // this.cart = cart;
         this.cartController = cartController;
         this.menuCommand = menuCommand;
-        this.menuCommandProvider = menuCommandProvider;
         this.checkoutCommandProvider = checkoutCommandProvider;
         this.deleteCommandProvider = deleteCommandProvider;
     }
