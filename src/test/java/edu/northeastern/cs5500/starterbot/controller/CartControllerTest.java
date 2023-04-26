@@ -6,7 +6,9 @@ import edu.northeastern.cs5500.starterbot.model.Cart;
 import edu.northeastern.cs5500.starterbot.model.Dish;
 import edu.northeastern.cs5500.starterbot.repository.InMemoryRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
+@EnabledIfEnvironmentVariable(named = "MONGODB_URI", matches = ".+")
 class CartControllerTest {
     static final String USER_ID_1 = "28484913146489";
 
