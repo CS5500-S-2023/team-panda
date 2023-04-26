@@ -14,42 +14,46 @@ class CartControllerTest {
         return new CartController(new InMemoryRepository<>());
     }
 
+    Dish createTestDish() {
+        return Dish.builder().dishName("rice").price(0.99).build();
+    }
+
     @Test
-    void testGetItemsInCart() {
+    void testGetDishesForUser() {
         CartController cartController = getCartController();
-        // test empty cart
-        Dish dish = Dish.builder().dishName("rice").price(0.99).build();
-        assertThat(cartController.getItemsInCart(USER_ID_1)).doesNotContainKey(dish);
+
+        Dish dish = createTestDish();
+        assertThat(cartController.getDishesForUser(USER_ID_1)).doesNotContainKey(dish);
 
         // test non-empty cart
         cartController.addToCart(dish, USER_ID_1);
         cartController.addToCart(dish, USER_ID_1);
-        assertThat(cartController.getItemsInCart(USER_ID_1)).containsKey(dish);
+        assertThat(cartController.getDishesForUser(USER_ID_1)).containsKey(dish);
     }
 
     @Test
     void testAddToCart() {
         // emtpy cart
         CartController cartController = getCartController();
-        Dish dish = Dish.builder().dishName("rice").price(0.99).build();
-        assertThat(cartController.getItemsInCart(USER_ID_1)).isEmpty();
+        Dish dish = createTestDish();
+        assertThat(cartController.getDishesForUser(USER_ID_1)).isEmpty();
         // add to cart
         cartController.addToCart(dish, USER_ID_1);
         // non-empty cart
-        assertThat(cartController.getItemsInCart(USER_ID_1)).containsKey(dish);
+        assertThat(cartController.getDishesForUser(USER_ID_1)).containsKey(dish);
     }
 
     @Test
-    void testRemoveFromCart() {
+    void testDeleteNamedDishFromCart() {
         // add to cart
         CartController cartController = getCartController();
-        Dish dish = Dish.builder().dishName("rice").price(0.99).build();
+        Dish dish = createTestDish();
         cartController.addToCart(dish, USER_ID_1);
-        assertThat(cartController.getItemsInCart(USER_ID_1)).containsKey(dish);
+        assertThat(cartController.getDishesForUser(USER_ID_1)).containsKey(dish);
         // remove from cart
-        cartController.removeFromCart(dish, USER_ID_1);
+        cartController.deleteNamedDishFromCart(dish, USER_ID_1);
         // cart after removal
-        assertThat(cartController.getItemsInCart(USER_ID_1)).doesNotContainKey(dish);
+        assertThat(cartController.getDishesForUser(USER_ID_1)).doesNotContainKey(dish);
     }
 
     @Test
@@ -61,7 +65,7 @@ class CartControllerTest {
         assertThat(cart.getDiscordUserId()).isEqualTo(USER_ID_1);
 
         // test get non-empty cart for user
-        Dish dish = Dish.builder().dishName("rice").price(0.99).build();
+        Dish dish = createTestDish();
         cartController.addToCart(dish, USER_ID_1);
         assertThat(cart.getItems()).isNotEmpty();
     }
@@ -70,12 +74,12 @@ class CartControllerTest {
     void testClearCart() {
         // add to cart
         CartController cartController = getCartController();
-        Dish dish = Dish.builder().dishName("rice").price(0.99).build();
+        Dish dish = createTestDish();
         cartController.addToCart(dish, USER_ID_1);
-        assertThat(cartController.getItemsInCart(USER_ID_1)).containsKey(dish);
+        assertThat(cartController.getDishesForUser(USER_ID_1)).containsKey(dish);
         // clear cart
         cartController.clearCart(USER_ID_1);
         // empty cart
-        assertThat(cartController.getItemsInCart(USER_ID_1)).isEmpty();
+        assertThat(cartController.getDishesForUser(USER_ID_1)).isEmpty();
     }
 }

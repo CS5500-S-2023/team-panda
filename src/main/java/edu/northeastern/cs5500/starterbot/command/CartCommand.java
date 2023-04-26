@@ -70,10 +70,9 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         embedBuilder.setColor(0x1fab89);
 
         double totalPrice = 0;
-        if (!cartController.getItemsInCart(discordUserId).isEmpty()) {
+        if (!cartController.getDishesForUser(discordUserId).isEmpty()) {
             for (Map.Entry<Dish, Integer> entry :
-                    // use cartController instead of Cart to get specific cart for the user.
-                    cartController.getItemsInCart(discordUserId).entrySet()) {
+                    cartController.getDishesForUser(discordUserId).entrySet()) {
                 Dish dish = entry.getKey();
                 int quantity = entry.getValue();
                 String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
@@ -86,7 +85,7 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         embedBuilder.setFooter(String.format("Total Price: $%.2f", totalPrice));
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        if (!cartController.getItemsInCart(discordUserId).isEmpty()) {
+        if (!cartController.getDishesForUser(discordUserId).isEmpty()) {
             messageCreateBuilder =
                     messageCreateBuilder.addActionRow(
                             Button.primary(this.getName() + ":add-more", "Add More"),

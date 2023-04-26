@@ -56,7 +56,11 @@ public class Cart implements Model {
         items.clear();
     }
 
-    public void deleteDish(Dish dish) {
-        items.remove(dish);
+    public boolean deleteDish(Dish dish) {
+        if (items.containsKey(dish)) {
+            items.remove(dish);
+            return true;
+        }
+        return false;
     }
 }
