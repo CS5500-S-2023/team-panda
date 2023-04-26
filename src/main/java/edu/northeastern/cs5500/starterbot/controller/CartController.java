@@ -58,15 +58,19 @@ public class CartController {
     }
 
     /**
-     * Removes the specified dish from given user's cart.
+     * Removes the specified dish from given user's cart. Returns true is deleted sucessfully,
+     * otherwise returns false.
      *
      * @param dish The Dish to add to the cart.
      * @param discordMemberId The Discord member ID of the user.
      */
-    public void removeFromCart(Dish dish, String discordMemberId) {
+    public boolean deleteNamedDishFromCart(Dish dish, String discordMemberId) {
         Cart cart = getCartForUser(discordMemberId);
-        cart.deleteDish(dish);
-        cartRepository.update(cart);
+        if (cart.deleteDish(dish)) {
+            cartRepository.update(cart);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -78,8 +82,19 @@ public class CartController {
      *     null if the user has no items in the cart
      */
     @Nullable
-    public Map<Dish, Integer> getItemsInCart(String discordMemberId) {
+    public Map<Dish, Integer> getDishesForUser(String discordMemberId) {
         return getCartForUser(discordMemberId).getItems();
+    }
+
+    @Nullable
+    public Dish getNamedDishFromCart(String discordMemberId, String dishName) {
+        Map<Dish, Integer> dishes = getDishesForUser(discordMemberId);
+        for (Dish dish : dishes.keySet()) {
+            if (dish.getDishName().equals(dishName)) {
+                return dish;
+            }
+        }
+        return null;
     }
 
     /**
