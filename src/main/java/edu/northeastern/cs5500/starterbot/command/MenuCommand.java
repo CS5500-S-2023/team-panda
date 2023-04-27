@@ -1,8 +1,11 @@
 package edu.northeastern.cs5500.starterbot.command;
 
 import edu.northeastern.cs5500.starterbot.controller.CartController;
+import edu.northeastern.cs5500.starterbot.controller.MenuController;
 import edu.northeastern.cs5500.starterbot.model.Dish;
+import edu.northeastern.cs5500.starterbot.model.MenuItem;
 import java.util.Objects;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -16,21 +19,20 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 @Singleton
 @Slf4j
 public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
 
-    // Substituted a cart with a cartController
     private final CartController cartController;
     private final Provider<CartCommand> cartCommandProvider;
-    // private final CheckoutCommand checkoutCommand;
+    @Inject MenuController menuController;
 
     @Inject
     public MenuCommand(CartController cartController, Provider<CartCommand> cartCommandProvider) {
         this.cartController = cartController;
         this.cartCommandProvider = cartCommandProvider;
-        // this.checkoutCommand = checkoutCommand;
     }
 
     @Override
@@ -48,27 +50,26 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
     private void displayMenu(@Nonnull InteractionHook hook) {
         log.info("event: /menu");
 
-        StringSelectMenu menu =
-                StringSelectMenu.create("menu")
-                        .setPlaceholder(
-                                "Click to add a dish to your cart.") // modified the placeholder to
-                        // provide a clearer guidance
-                        .addOption(
-                                "Chow Mein",
-                                "chow-mein",
-                                "$3") // modified price presentation for all dishes
-                        .addOption("Orange Chicken", "orange-chicken", "$4")
-                        .addOption("Honey Walnut Shrimp", "honey-walnut-shrimp", "$4.5")
-                        .addOption("Mushroom Chicken", "mushroom-chicken", "$3.5")
-                        .addOption("Broccoli Beef", "broccoli-beef", "$4")
-                        .build();
+        Set<MenuItem> menuItems = menuController.getMenuItems();
 
-        MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        messageCreateBuilder =
-                messageCreateBuilder.addActionRow(menu); // add menu to messageCreateBuilder
-        // deleted three buttons
+        if (menuItems == null) {
+            hook.sendMessage("No dish available.").queue();
+            return;
+        }
 
-        hook.sendMessage(messageCreateBuilder.build()).queue();
+        StringSelectMenu.Builder menuBuilder =
+                StringSelectMenu.create("menu").setPlaceholder("Click to add a dish to your cart.");
+        for (MenuItem menuItem : menuItems) {
+            menuBuilder.addOption(
+                    menuItem.getItemName(),
+                    menuItem.getId().toString(),
+                    String.valueOf(menuItem.getPrice()));
+        }
+
+        StringSelectMenu menu = menuBuilder.build();
+
+        MessageCreateData messageCreateData = new MessageCreateBuilder().addActionRow(menu).build();
+        hook.sendMessage(messageCreateData).queue();
     }
 
     @Override
@@ -96,37 +97,22 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         String reply = "You added " + response + " to your cart.";
         double dishPrice = 0.0;
         String discordUserId = event.getUser().getId();
-        if (!response.equals("")) {
-            switch (response) {
-                case "chow-mein":
-                    dishPrice = 3.0;
-                    break;
-                case "orange-chicken":
-                    dishPrice = 4.0;
-                    break;
-                case "honey-walnut-shrimp":
-                    dishPrice = 4.5;
-                    break;
-                case "mushroom-chicken":
-                    dishPrice = 3.5;
-                    break;
-                case "broccoli-beef":
-                    dishPrice = 4.0;
-                    break;
-                default:
-                    event.reply("Invalid dish name.").queue();
-            }
-        }
+
+        Set<MenuItem> menuItems = menuController.getMenuItems();
+        dishPrice =
+                menuItems.stream()
+                        .filter(item -> item.getItemName().equals(response))
+                        .findFirst()
+                        .get()
+                        .getPrice();
 
         if (dishPrice != 0.0) {
             Dish dish = Dish.builder().dishName(response).price(dishPrice).build();
-            // cart.addDish(dish);
             cartController.addToCart(dish, discordUserId);
             event.reply(reply).queue();
         }
 
+        // TODO: remove the cartCommandProvide once we solove the cyclic depency issue.
         cartCommandProvider.get().displayCart(event.getHook(), discordUserId);
     }
-
-    // deleted button interaction
 }
