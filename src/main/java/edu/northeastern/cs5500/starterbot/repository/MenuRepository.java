@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface MenuRepository extends MongoRepository<Menu, String> {
 
-    Optional<Menu> findById(String id);
+    Optional<Menu> findById(int id);
 }
