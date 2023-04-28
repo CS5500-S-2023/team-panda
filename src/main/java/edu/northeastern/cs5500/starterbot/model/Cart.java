@@ -52,7 +52,12 @@ public class Cart implements Model {
      */
     public boolean deleteDish(Dish dish) {
         if (items.containsKey(dish)) {
-            items.remove(dish);
+            int count = items.get(dish);
+            if (count == 1) {
+                items.remove(dish);
+            } else {
+                items.put(dish, count - 1);
+            }
             return true;
         }
         return false;

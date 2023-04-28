@@ -62,8 +62,8 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         for (MenuItem menuItem : menuItems) {
             menuBuilder.addOption(
                     menuItem.getItemName(),
-                    menuItem.getId().toString(),
-                    String.valueOf(menuItem.getPrice()));
+                    menuItem.getItemName(),
+                    "$" + String.valueOf(menuItem.getPrice()));
         }
 
         StringSelectMenu menu = menuBuilder.build();
@@ -110,6 +110,8 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
             Dish dish = Dish.builder().dishName(response).price(dishPrice).build();
             cartController.addToCart(dish, discordUserId);
             event.reply(reply).queue();
+        } else {
+            event.reply("Invalid option selected.").queue();
         }
 
         // TODO: remove the cartCommandProvide once we solove the cyclic depency issue.
