@@ -4,6 +4,8 @@ package edu.northeastern.cs5500.starterbot.command;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import edu.northeastern.cs5500.starterbot.model.Menu;
+import edu.northeastern.cs5500.starterbot.model.MenuItem;
 
 @Module
 public class CommandModule {
@@ -108,5 +110,15 @@ public class CommandModule {
     @IntoSet
     public ButtonHandler provideCongraCommandClickHandler(CongraCommand congraCommand) {
         return congraCommand;
+    }
+
+    @Provides
+    public Class<MenuItem> provideMenuItem() {
+        return MenuItem.class;
+    }
+
+    @Provides
+    public Class<Menu> provideMenu() {
+        return Menu.class;
     }
 }
