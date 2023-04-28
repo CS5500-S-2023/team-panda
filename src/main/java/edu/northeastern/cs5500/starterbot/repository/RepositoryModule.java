@@ -41,14 +41,25 @@ public class RepositoryModule {
         return repository;
     }
 
+    // @Provides
+    // public GenericRepository<Menu> provideMenuRepository(InMemoryRepository<Menu> repository) {
+    //     return repository;
+    // }
+
     @Provides
-    public GenericRepository<Menu> provideMenuRepository(InMemoryRepository<Menu> repository) {
+    public GenericRepository<Menu> provideMenuRepository(MongoDBRepository<Menu> repository) {
         return repository;
     }
 
+    // @Provides
+    // public GenericRepository<MenuItem> provideMenuItemRepository(
+    //         InMemoryRepository<MenuItem> repository) {
+    //     return repository;
+    // }
+
     @Provides
     public GenericRepository<MenuItem> provideMenuItemRepository(
-            InMemoryRepository<MenuItem> repository) {
+            MongoDBRepository<MenuItem> repository) {
         return repository;
     }
 }

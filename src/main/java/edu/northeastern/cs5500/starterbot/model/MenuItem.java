@@ -16,4 +16,5 @@ public class MenuItem implements Model {
 
     @Nonnull private String itemName;
     private double price;
+    private ObjectId menuId;
 }
