@@ -28,7 +28,12 @@ public class MenuController {
         // }
         // return null;
         ObjectId id = new ObjectId("644adbc72033f29847bce48e");
-        return menuItemController.getMenuItems(id);
+        Set<MenuItem> output = menuItemController.getMenuItems(id);
+        if (output.isEmpty()) {
+            return null;
+        } else {
+            return output;
+        }
     }
 
     // TODO Add getMenuItemsByMenuId(String menuId) if we figure out how to get menuId
