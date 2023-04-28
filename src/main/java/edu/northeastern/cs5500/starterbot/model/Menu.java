@@ -17,7 +17,5 @@ public class Menu implements Model {
     @Inject MenuItemController menuItemController;
 
     @Inject
-    public Menu() {
-        // menuItems = menuItemController.getMenuItems(id);
-    }
+    public Menu() {}
 }
