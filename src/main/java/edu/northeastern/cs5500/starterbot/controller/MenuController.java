@@ -30,7 +30,7 @@ public class MenuController {
         // return null;
         ObjectId id = new ObjectId("644adbc72033f29847bce48e");
         Collection<Menu> one = menuRepository.getAll();
-        System.out.println(one.toString() + "MenuItem work?");
+        System.out.println(one.toString() + "MenuItem work???????????");
         Set<MenuItem> output = menuItemController.getMenuItems(id);
         if (output.isEmpty()) {
             return null;
