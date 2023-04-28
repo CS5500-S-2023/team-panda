@@ -1,6 +1,5 @@
 package edu.northeastern.cs5500.starterbot.model;
 
-import edu.northeastern.cs5500.starterbot.controller.MenuItemController;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,6 @@ import org.bson.types.ObjectId;
 public class Menu implements Model {
     ObjectId id;
     Set<MenuItem> menuItems;
-    @Inject MenuItemController menuItemController;
 
     @Inject
     public Menu() {}
