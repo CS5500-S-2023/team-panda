@@ -27,8 +27,11 @@ public class MongoDBRepository<T extends Model> implements GenericRepository<T> 
     @Inject
     public MongoDBRepository(Class<T> clazz, MongoDBService mongoDBService) {
         MongoDatabase mongoDatabase = mongoDBService.getMongoDatabase();
-        collection = mongoDatabase.getCollection(clazz.getName(), clazz);
-        // collection = mongoDatabase.getCollection("menuItem", clazz);
+        System.out.println(
+                "start here---->>"
+                        + clazz.getName().split("\\.")[5]
+                        + "<<<---clazz.getName()!!!!!!!!!!!!");
+        collection = mongoDatabase.getCollection(clazz.getName().split("\\.")[5], clazz);
     }
 
     @Nullable

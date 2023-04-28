@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.controller;
 import edu.northeastern.cs5500.starterbot.model.Menu;
 import edu.northeastern.cs5500.starterbot.model.MenuItem;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
+import java.util.Collection;
 import java.util.Set;
 import javax.inject.Inject;
 import org.bson.types.ObjectId;
@@ -28,6 +29,8 @@ public class MenuController {
         // }
         // return null;
         ObjectId id = new ObjectId("644adbc72033f29847bce48e");
+        Collection<Menu> one = menuRepository.getAll();
+        System.out.println(one.toString() + "MenuItem work?");
         Set<MenuItem> output = menuItemController.getMenuItems(id);
         if (output.isEmpty()) {
             return null;
