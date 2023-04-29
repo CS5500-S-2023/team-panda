@@ -30,5 +30,35 @@ public class MenuController {
         }
     }
 
+    public boolean isMenuOwner(String discordUserId) {
+        Menu menu = menuRepository.getAll().iterator().next();
+        return menu.getOwnerId().equals(discordUserId);
+    }
+
+    /**
+     * Add menuItem into Menu. If this itemName already in the database, it will return false. If
+     * added successfully, it will return true.
+     *
+     * @param itemName The name of the item
+     * @param itemPrice the price of the item
+     * @return true if added, false otherwise
+     */
+    public boolean addMenuItem(String itemName, String itemPrice) {
+        boolean added = false;
+        Menu menu = menuRepository.getAll().iterator().next();
+        for (MenuItem item : this.getMenuItems()) {
+            if (item.getItemName().equals(itemName)) {
+                return false;
+            }
+        }
+        MenuItem menuItem = menuItemController.addNewMenuItem(itemName, itemPrice, menu.getId());
+        for (MenuItem item : this.getMenuItems()) {
+            if (item.getId().equals(menuItem.getId())) {
+                added = true;
+            }
+        }
+        return added;
+    }
+
     // TODO Add getMenuItemsByMenuId(String menuId) if we figure out how to get menuId
 }

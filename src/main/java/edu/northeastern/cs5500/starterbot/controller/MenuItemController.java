@@ -26,4 +26,16 @@ public class MenuItemController {
         }
         return items;
     }
+
+    public MenuItem addNewMenuItem(String itemName, String itemPrice, ObjectId menuId) {
+        MenuItem menuItem =
+                MenuItem.builder()
+                        .id(new ObjectId())
+                        .itemName(itemName)
+                        .price(Double.parseDouble(itemPrice))
+                        .menuId(menuId)
+                        .build();
+        menuItemRepository.add(menuItem);
+        return menuItem;
+    }
 }
