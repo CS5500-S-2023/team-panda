@@ -121,4 +121,10 @@ public class CommandModule {
     public Class<Menu> provideMenu() {
         return Menu.class;
     }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideAddMenuItemCommand(AddMenuItemCommand addMenuItemCommand) {
+        return addMenuItemCommand;
+    }
 }

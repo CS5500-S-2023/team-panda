@@ -2,14 +2,18 @@ package edu.northeastern.cs5500.starterbot.command;
 
 import edu.northeastern.cs5500.starterbot.controller.MenuController;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import org.jetbrains.annotations.NotNull;
 
+@Singleton
+@Slf4j
 public class AddMenuItemCommand implements SlashCommandHandler {
 
     @Inject MenuController menuController;
@@ -17,28 +21,31 @@ public class AddMenuItemCommand implements SlashCommandHandler {
     @Inject
     public AddMenuItemCommand() {}
 
-    @NotNull
     @Override
+    @Nonnull
     public String getName() {
         return "addMenuItem";
     }
 
-    @NotNull
     @Override
+    @Nonnull
     public CommandData getCommandData() {
-        return new Commands.slash(getName(), "Add a new item to the menu"
-            .addOptions(
-                new OptionData(OptionType.STRING, "itemName", "Name of the item").setRequired(true),
-                new OptionData(OptionType.STRING, "itemPrice", "Price of the item").setRequired(true));
+        return Commands.slash(getName(), "Add a new item to the menu")
+                .addOptions(
+                        new OptionData(OptionType.STRING, "itemName", "Name of the item")
+                                .setRequired(true),
+                        new OptionData(OptionType.STRING, "itemPrice", "Price of the item")
+                                .setRequired(true));
     }
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /addMenuItem");
-
         String itemName = Objects.requireNonNull(event.getOption("itemName")).getAsString();
-        String itemPrice = Objects.requireNonNull(event.getOption("itemPrice")).getAsString();
+
         String discordUserId = event.getUser().getId();
+
+        String itemPrice = Objects.requireNonNull(event.getOption("itemPrice")).getAsString();
 
         boolean operation = false;
         if (!menuController.isMenuOwner(discordUserId)) {
