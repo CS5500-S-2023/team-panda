@@ -12,7 +12,9 @@ import org.bson.types.ObjectId;
 @AllArgsConstructor
 public class Menu implements Model {
     ObjectId id;
-    Set<MenuItem> menuItems;
+
+    private Set<MenuItem> menuItems;
+    private String ownerId;
 
     @Inject
     public Menu() {}

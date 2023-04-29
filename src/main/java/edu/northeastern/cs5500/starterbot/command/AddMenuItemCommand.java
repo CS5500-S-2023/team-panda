@@ -24,7 +24,7 @@ public class AddMenuItemCommand implements SlashCommandHandler {
     @Override
     @Nonnull
     public String getName() {
-        return "addMenuItem";
+        return "addmenuitem";
     }
 
     @Override
@@ -32,32 +32,33 @@ public class AddMenuItemCommand implements SlashCommandHandler {
     public CommandData getCommandData() {
         return Commands.slash(getName(), "Add a new item to the menu")
                 .addOptions(
-                        new OptionData(OptionType.STRING, "itemName", "Name of the item")
+                        new OptionData(OptionType.STRING, "itemname", "Name of the item")
                                 .setRequired(true),
-                        new OptionData(OptionType.STRING, "itemPrice", "Price of the item")
+                        new OptionData(OptionType.STRING, "itemprice", "Price of the item")
                                 .setRequired(true));
     }
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /addMenuItem");
-        String itemName = Objects.requireNonNull(event.getOption("itemName")).getAsString();
+        String itemName = Objects.requireNonNull(event.getOption("itemname")).getAsString();
 
         String discordUserId = event.getUser().getId();
+        System.out.println("Start>>>>>>>>>" + discordUserId + "<<<<<End here");
 
-        String itemPrice = Objects.requireNonNull(event.getOption("itemPrice")).getAsString();
+        String itemPrice = Objects.requireNonNull(event.getOption("itemprice")).getAsString();
 
         boolean operation = false;
         if (!menuController.isMenuOwner(discordUserId)) {
-            event.reply("You are not the owner of this store").queue();
+            event.reply("You are not the owner of this store.").queue();
             return;
         } else {
             operation = menuController.addMenuItem(itemName, itemPrice);
         }
         if (operation) {
-            event.reply("Item added successfully").queue();
+            event.reply(itemName + " added successfully.").queue();
         } else {
-            event.reply("Item could not be added").queue();
+            event.reply(itemName + " could not be added.").queue();
         }
     }
 }
