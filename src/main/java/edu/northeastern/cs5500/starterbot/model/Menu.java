@@ -13,7 +13,12 @@ import org.bson.types.ObjectId;
 public class Menu implements Model {
     ObjectId id;
     Set<MenuItem> menuItems;
+    String ownerId;
 
     @Inject
     public Menu() {}
+
+    public void addMenuItem(MenuItem menuItem) {
+        menuItems.add(menuItem);
+    }
 }
