@@ -30,5 +30,16 @@ public class MenuController {
         }
     }
 
+    public boolean isMenuOwner(String discordUserId) {
+        Menu menu = menuRepository.getAll().iterator().next();
+        return menu.getId().equals(discordUserId);
+    }
+
+    public boolean addMenuItem(String itemName, String itemPrice) {
+        Menu menu = menuRepository.getAll().iterator().next();
+        MenuItem menuItem = menuItemController.addNewMenuItem(itemName, itemPrice, menu.getId());
+        return menu.getMenuItems().add(menuItem);
+    }
+
     // TODO Add getMenuItemsByMenuId(String menuId) if we figure out how to get menuId
 }
