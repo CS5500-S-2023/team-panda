@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.command;
 import edu.northeastern.cs5500.starterbot.controller.CartController;
 import edu.northeastern.cs5500.starterbot.model.Dish;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -71,7 +72,12 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
                 Dish dish = entry.getKey();
                 int quantity = entry.getValue();
                 String itemName = String.format("%s (x%d)", dish.getDishName(), quantity);
-                embedBuilder.addField(itemName, String.format("$%.2f", dish.getPrice()), false);
+                String itemPrice = String.format("$%.2f", dish.getPrice());
+                if (itemName == null || itemPrice == null) {
+                    // can never happen because the first arguments to String.format are not null
+                    throw new NullPointerException();
+                }
+                embedBuilder.addField(itemName, itemPrice, false);
                 totalPrice += dish.getPrice() * quantity;
             }
         } else {
@@ -106,7 +112,8 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        final String response = event.getButton().getId().split(":")[1];
+        final String id = Objects.requireNonNull(event.getButton().getId());
+        final String response = id.split(":")[1];
         event.deferReply().queue();
         switch (response) {
             case "add-more":
@@ -135,10 +142,6 @@ public class CartCommand implements SlashCommandHandler, ButtonHandler {
         String discordUserId = event.getUser().getId();
         displayCart(event.getHook(), discordUserId);
     }
-
-    // public Cart getCart() {
-    //     return cartController.getCart();
-    // }
 
     public void clearCart(ButtonInteractionEvent event) {
         String discordUserId = event.getUser().getId();
