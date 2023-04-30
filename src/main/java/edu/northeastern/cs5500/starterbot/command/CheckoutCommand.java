@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -23,6 +22,7 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
     @Inject CartCommand cartCommand;
     @Inject CongraCommand congraCommand;
     @Inject CartController cartController;
+    @Inject CheckoutRender checkoutRender;
 
     @Inject
     public CheckoutCommand() {
@@ -39,25 +39,6 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
     @Nonnull
     public CommandData getCommandData() {
         return Commands.slash(getName(), "Please checkout here."); // Changed command description
-    }
-
-    private void display(@Nonnull InteractionHook hook, String discordUserId) {
-        log.info("event: /checkout");
-
-        Cart cart = cartController.getCartForUser(discordUserId);
-        EmbedBuilder embedBuilder =
-                new EmbedBuilder()
-                        .setTitle("Total Price: " + String.format("$%.2f", cart.getTotalPrice()));
-
-        MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
-        messageCreateBuilder =
-                messageCreateBuilder.addActionRow(
-                        Button.primary(this.getName() + ":make-payment", "Make Payment"),
-                        Button.primary(this.getName() + ":cart", "Back to Cart"),
-                        Button.danger(this.getName() + ":cancel", "Cancel"));
-
-        messageCreateBuilder.setContent("").setEmbeds(embedBuilder.build());
-        hook.sendMessage(messageCreateBuilder.build()).queue();
     }
 
     @Override
@@ -105,6 +86,6 @@ public class CheckoutCommand implements SlashCommandHandler, ButtonHandler {
 
     public void sendCheckout(@Nonnull ButtonInteractionEvent event) {
         String discordUserId = event.getUser().getId();
-        display(event.getHook(), discordUserId);
+        checkoutRender.renderCheckout(event.getHook(), discordUserId);
     }
 }

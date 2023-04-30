@@ -60,7 +60,6 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
                         Button.primary(this.getName() + ":menu", "Menu"),
                         Button.primary(this.getName() + ":view-cart", "View Cart"),
                         Button.danger(this.getName() + ":cancel", "Cancel"));
-
         messageCreateBuilder.setContent("").setEmbeds(embedBuilder.build());
         event.reply(messageCreateBuilder.build()).queue();
     }
@@ -82,10 +81,7 @@ public class StartCommand implements SlashCommandHandler, ButtonHandler {
                 cartCommand.sendCart(event);
                 break;
             case "cancel":
-                // Reset the bot's state to the initial state
-                // resetBotState();
                 cartController.clearCart(discordUserId);
-                // Send a message to the user to confirm that the operation was cancelled
                 event.getHook()
                         .sendMessage(" Thank you for visiting FoodiePanda, please come again.")
                         .queue();

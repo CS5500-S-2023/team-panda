@@ -5,6 +5,7 @@ import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.bson.types.ObjectId;
 
@@ -27,7 +28,7 @@ public class MenuItemController {
         return items;
     }
 
-    public MenuItem addNewMenuItem(String itemName, String itemPrice, ObjectId menuId) {
+    public MenuItem addNewMenuItem(@Nonnull String itemName, String itemPrice, ObjectId menuId) {
         MenuItem menuItem =
                 MenuItem.builder()
                         .id(new ObjectId())
