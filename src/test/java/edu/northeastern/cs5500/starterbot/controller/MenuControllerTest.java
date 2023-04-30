@@ -2,11 +2,9 @@ package edu.northeastern.cs5500.starterbot.controller;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.util.Set;
-
-import edu.northeastern.cs5500.starterbot.model.Menu;
 import edu.northeastern.cs5500.starterbot.model.MenuItem;
 import edu.northeastern.cs5500.starterbot.repository.InMemoryRepository;
+import java.util.Set;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -20,8 +18,7 @@ public class MenuControllerTest {
 
     private MenuController getMenuController() {
         return new MenuController(
-                new InMemoryRepository<>(),
-                new MenuItemController(new InMemoryRepository<>()));
+                new InMemoryRepository<>(), new MenuItemController(new InMemoryRepository<>()));
     }
 
     @Test
