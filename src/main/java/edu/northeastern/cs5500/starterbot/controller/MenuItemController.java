@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.bson.types.ObjectId;
+import java.util.Objects;
 
 public class MenuItemController {
     GenericRepository<MenuItem> menuItemRepository;
@@ -36,6 +37,7 @@ public class MenuItemController {
                         .price(Double.parseDouble(itemPrice))
                         .menuId(menuId)
                         .build();
+        Objects.requireNonNull(menuItem);
         menuItemRepository.add(menuItem);
         return menuItem;
     }

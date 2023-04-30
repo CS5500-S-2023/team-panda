@@ -5,6 +5,7 @@ import edu.northeastern.cs5500.starterbot.model.MenuItem;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import java.util.Set;
 import javax.inject.Inject;
+import java.util.Objects;
 
 public class MenuController {
     GenericRepository<Menu> menuRepository;
@@ -51,6 +52,7 @@ public class MenuController {
                 return false;
             }
         }
+        Objects.requireNonNull(itemName);
         MenuItem menuItem = menuItemController.addNewMenuItem(itemName, itemPrice, menu.getId());
         for (MenuItem item : this.getMenuItems()) {
             if (item.getId().equals(menuItem.getId())) {
