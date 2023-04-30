@@ -22,6 +22,12 @@ public class MenuRender {
         // left blank for Dagger injection
     }
 
+    /**
+     * This function will show the menu from the database. Customers can choose and click what they
+     * want. Once an item has been clicked, it will be added to this customer's cart.
+     *
+     * @param hook
+     */
     public void renderMenu(@Nonnull InteractionHook hook) {
         log.info("event: /menu");
 
