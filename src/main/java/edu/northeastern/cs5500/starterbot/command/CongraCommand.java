@@ -27,12 +27,14 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
         // left blank for Dagger injection
     }
 
+    /** The name of this class. */
     @Override
     @Nonnull
     public String getName() {
         return "congra";
     }
 
+    /** The description of this command. */
     @Override
     @Nonnull
     public CommandData getCommandData() {
@@ -44,7 +46,7 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
      * for user to choose as either to pick or deliver the order.
      *
      * @param hook
-     * @param discordUserId
+     * @param discordUserId the discord Id of user
      */
     private void display(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /congra");
@@ -62,17 +64,28 @@ public class CongraCommand implements SlashCommandHandler, ButtonHandler {
                 .queue();
     }
 
+    /** Shown the congratulation message to customer. */
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         String discordUserId = event.getUser().getId();
         display(event.getHook(), discordUserId);
     }
 
+    /**
+     * Send cart to the customer. They can see what they have added to their cart.
+     *
+     * @param event
+     */
     public void sendCongra(@Nonnull StringSelectInteractionEvent event) {
         String discordUserId = event.getUser().getId();
         display(event.getHook(), discordUserId);
     }
 
+    /**
+     * Send cart to the customer. They can see what they have added to their cart.
+     *
+     * @param event
+     */
     public void sendCongra(@Nonnull ButtonInteractionEvent event) {
         String discordUserId = event.getUser().getId();
         display(event.getHook(), discordUserId);

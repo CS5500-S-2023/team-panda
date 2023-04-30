@@ -21,6 +21,14 @@ public class CheckoutRender {
         // left blank for Dagger injection
     }
 
+    /**
+     * Showing the total price of dishes in customers' cart. They can make payment by clicking Make
+     * Payment button. They can go back to their cart by clicking Back to Cart. They can clear their
+     * cart and exit by clickng Cancel.
+     *
+     * @param hook the interaction from user
+     * @param discordUserId the discord Id of user
+     */
     public void renderCheckout(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /checkout");
 

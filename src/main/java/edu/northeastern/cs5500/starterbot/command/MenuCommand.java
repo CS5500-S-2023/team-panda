@@ -28,23 +28,27 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         // left blank for Dagger injection
     }
 
+    /** The name of this class. */
     @Override
     @Nonnull
     public String getName() {
         return "menu";
     }
 
+    /** The description of this command. */
     @Override
     @Nonnull
     public CommandData getCommandData() {
         return Commands.slash(getName(), "Show menu for users to select dishes.");
     }
 
+    /** Send menu to customers. */
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         menuRender.renderMenu(event.getHook());
     }
 
+    /** Send menu to customers. */
     public void sendMenu(@Nonnull StringSelectInteractionEvent event) {
         menuRender.renderMenu(event.getHook());
     }
@@ -58,6 +62,11 @@ public class MenuCommand implements SlashCommandHandler, StringSelectHandler {
         menuRender.renderMenu(event.getHook());
     }
 
+    /**
+     * After customer chose dish, we can send a message to him, which can let him make sure he has
+     * added this dish. At the same time, this dish should be added to his cart. Then, show him his
+     * cart.
+     */
     @Override
     public void onStringSelectInteraction(@Nonnull StringSelectInteractionEvent event) {
         final String response = event.getInteraction().getValues().get(0);
