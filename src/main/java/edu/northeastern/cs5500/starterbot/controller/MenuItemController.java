@@ -19,7 +19,7 @@ public class MenuItemController {
     }
 
     public Set<MenuItem> getMenuItems(ObjectId menuId) {
-        Set<MenuItem> items = new HashSet<MenuItem>();
+        Set<MenuItem> items = new HashSet<>();
         Collection<MenuItem> menuItems = menuItemRepository.getAll();
         for (MenuItem menuItem : menuItems) {
             if (menuItem.getMenuId().equals(menuId)) {

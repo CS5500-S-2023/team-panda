@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.controller;
 import edu.northeastern.cs5500.starterbot.model.Menu;
 import edu.northeastern.cs5500.starterbot.model.MenuItem;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import javax.inject.Inject;
@@ -25,7 +26,7 @@ public class MenuController {
         Menu menu = menuRepository.getAll().iterator().next();
         Set<MenuItem> output = menuItemController.getMenuItems(menu.getId());
         if (output.isEmpty()) {
-            return null;
+            return Collections.emptySet();
         } else {
             return output;
         }
@@ -61,6 +62,4 @@ public class MenuController {
         }
         return added;
     }
-
-    // TODO Add getMenuItemsByMenuId(String menuId) if we figure out how to get menuId
 }
