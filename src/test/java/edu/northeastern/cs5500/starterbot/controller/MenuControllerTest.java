@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
-//@EnabledIfEnvironmentVariable(named = "MONGODB_URI", matches = ".+")
+@EnabledIfEnvironmentVariable(named = "MONGODB_URI", matches = ".+")
 public class MenuControllerTest {
     static final String USER_ID_2 = "28484913146480";
     static final String NAME = "rice";
