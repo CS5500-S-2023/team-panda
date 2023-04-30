@@ -7,14 +7,22 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import javax.inject.Inject;
+import org.bson.types.ObjectId;
 
 public class MenuController {
-    GenericRepository<Menu> menuRepository;
+    @Inject GenericRepository<Menu> menuRepository;
     @Inject MenuItemController menuItemController;
 
     @Inject
-    MenuController(GenericRepository<Menu> menuRepository) {
+    MenuController(GenericRepository<Menu> menuRepository, MenuItemController menuItemController) {
         this.menuRepository = menuRepository;
+        this.menuItemController = menuItemController;
+    }
+
+    public Menu addNewMenu(String ownerId) {
+        Menu menu = Menu.builder().id(new ObjectId()).ownerId(ownerId).build();
+        menu.setOwnerId(ownerId);
+        return menuRepository.add(menu);
     }
 
     /**
@@ -24,6 +32,9 @@ public class MenuController {
      */
     public Set<MenuItem> getMenuItems() {
         Menu menu = menuRepository.getAll().iterator().next();
+        if (menu == null) {
+            return Collections.emptySet();
+        }
         Set<MenuItem> output = menuItemController.getMenuItems(menu.getId());
         if (output.isEmpty()) {
             return Collections.emptySet();
