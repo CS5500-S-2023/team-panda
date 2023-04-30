@@ -23,9 +23,8 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 @Slf4j
 public class DeleteCommand implements StringSelectHandler {
 
-    // Substituted a cart with a cartController
     @Inject CartController cartController;
-    @Inject CartCommand cartCommand;
+    @Inject CartRender cartRender;
 
     @Inject
     public DeleteCommand() {
@@ -44,7 +43,7 @@ public class DeleteCommand implements StringSelectHandler {
      *
      * @param hook
      */
-    private void displayDeletePage(@Nonnull InteractionHook hook, String discordUserId) {
+    private void displayDelete(@Nonnull InteractionHook hook, String discordUserId) {
         log.info("event: /delete");
 
         if (cartController.getDishesForUser(discordUserId).isEmpty()) {
@@ -77,9 +76,9 @@ public class DeleteCommand implements StringSelectHandler {
      *
      * @param event
      */
-    public void sendDeletePage(@Nonnull ButtonInteractionEvent event) {
+    public void sendDelete(@Nonnull ButtonInteractionEvent event) {
         String discordUserId = event.getUser().getId();
-        displayDeletePage(event.getHook(), discordUserId);
+        displayDelete(event.getHook(), discordUserId);
     }
 
     /**
@@ -100,6 +99,6 @@ public class DeleteCommand implements StringSelectHandler {
 
         cartController.deleteNamedDishFromCart(dishToRemove, discordUserId);
         event.reply("You removed " + selectedDishName + " from your cart.").queue();
-        cartCommand.displayCart(event.getHook(), discordUserId);
+        cartRender.renderCart(event.getHook(), discordUserId);
     }
 }
